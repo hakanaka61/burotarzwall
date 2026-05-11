@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bürotarz — Lüks Tablo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=Josefin+Sans:wght@100;200;300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold:        #c9a84c;
+            --gold-bright: #f0d080;
+            --gold-dim:    #7a6230;
+            --gold-glow:   rgba(201,168,76,0.18);
+            --cream:       #f5efe0;
+            --deep:        #08070a;
+            --panel-bg:    rgba(6, 5, 9, 0.72);
+            --glass:       rgba(255,255,255,0.03);
+            --border:      rgba(201,168,76,0.22);
+            --text-muted:  rgba(240,220,170,0.45);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body, html {
+            width: 100%; height: 100%;
+            background: #04030a;
+            font-family: 'Josefin Sans', sans-serif;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            color: var(--cream);
+        }
+
+        /* ── NOISE OVERLAY ── */
+        body::before {
+            content:''; position:fixed; inset:0; pointer-events:none; z-index:9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: .55;
+        }
+
+        /* ══════════════════════════════
+           FRAME
+        ══════════════════════════════ */
+        .frame-wrap {
+            width: 96vw; height: 92vh;
+            position: relative;
+            /* Layered shadow = deep 3-D wall effect */
+            filter:
+                drop-shadow(0 80px 60px rgba(0,0,0,.95))
+                drop-shadow(0 30px 15px rgba(0,0,0,.8));
+        }
+
+        /* Outer wood bevel */
+        .frame-wood {
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, #4e301a 0%, #1a0e08 40%, #0a0603 100%);
+            border-radius: 3px;
+            box-shadow:
+                inset 0 0 0 3px #6b3d1e,
+                inset 0 0 0 6px #1a0c07,
+                inset 0 0 0 8px #5a3318;
+        }
+
+        /* Gold filigree inner bevel */
+        .frame-gold {
+            position: absolute; inset: 22px;
+            border: 2px solid;
+            border-color: var(--gold-dim) var(--gold-bright) var(--gold-bright) var(--gold-dim);
+            border-radius: 1px;
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,.9),
+                0 0 25px rgba(201,168,76,.15),
+                inset 0 0 0 1px rgba(0,0,0,.9);
+        }
+
+        /* Corner ornament dots */
+        .frame-gold::before, .frame-gold::after {
+            content:''; position:absolute;
+            width:12px; height:12px; border-radius:50%;
+            background: radial-gradient(circle, var(--gold-bright) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+            box-shadow: 0 0 8px var(--gold);
+        }
+        .frame-gold::before { top:-6px; left:-6px; }
+        .frame-gold::after  { bottom:-6px; right:-6px; }
+
+        /* Canvas area */
+        .canvas {
+            position: absolute; inset: 30px;
+            overflow: hidden; border-radius: 1px;
+            background: #000;
+        }
+
+        /* ── SLIDESHOW ── */
+        .slideshow { position:absolute; inset:0; z-index:0; }
+        .slide {
+            position:absolute; inset:0;
+            background-size:cover; background-position:center;
+            opacity:0;
+            animation: slideKen 36s infinite ease-in-out;
+            will-change: transform, opacity;
+        }
+        .slide:nth-child(1){ background-image:url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=90&w=2200&auto=format&fit=crop'); animation-delay:0s; }
+        .slide:nth-child(2){ background-image:url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=90&w=2200&auto=format&fit=crop'); animation-delay:12s; }
+        .slide:nth-child(3){ background-image:url('https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=90&w=2200&auto=format&fit=crop'); animation-delay:24s; }
+
+        @keyframes slideKen {
+            0%   { opacity:0; transform:scale(1.08) translate(0,0); }
+            8%   { opacity:1; }
+            33%  { opacity:1; }
+            42%  { opacity:0; transform:scale(1) translate(-1%,-0.5%); }
+            100% { opacity:0; }
+        }
+
+        /* Vignette + gradient overlay */
+        .overlay {
+            position:absolute; inset:0; z-index:1;
+            background:
+                radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,.7) 100%),
+                linear-gradient(to bottom, rgba(0,0,0,.65) 0%, rgba(0,0,0,.05) 45%, rgba(0,0,0,.65) 100%),
+                linear-gradient(to right,  rgba(0,0,0,.55) 0%, transparent 30%, transparent 70%, rgba(0,0,0,.55) 100%);
+        }
+
+        /* ══════════════════════════════
+           LAYOUT GRID
+        ══════════════════════════════ */
+        .ui {
+            position:absolute; inset:0; z-index:2;
+            display:grid;
+            grid-template-columns: 310px 1fr 310px;
+            grid-template-rows: 1fr;
+            padding: 32px 36px;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        /* ── PANEL ── */
+        .panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(18px) saturate(1.4);
+            -webkit-backdrop-filter: blur(18px) saturate(1.4);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 28px 24px;
+            display: flex; flex-direction: column;
+            position:relative; overflow:hidden;
+        }
+        /* top shimmer line */
+        .panel::before {
+            content:''; position:absolute; top:0; left:10%; right:10%; height:1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            opacity:.6;
+        }
+        /* corner accent */
+        .panel::after {
+            content:''; position:absolute; top:0; left:0;
+            border-top: 24px solid transparent;
+            border-left: 24px solid var(--gold-dim);
+            opacity:.35;
+        }
+
+        .panel-title {
+            font-family:'Cinzel', serif;
+            font-size:11px; letter-spacing:4px;
+            color: var(--gold);
+            text-transform:uppercase;
+            margin-bottom:20px;
+            padding-bottom:10px;
+            border-bottom:1px solid var(--border);
+            display:flex; align-items:center; gap:10px;
+        }
+        .panel-title::before { content:''; flex:1; height:1px; background:var(--border); }
+
+        /* ══════════════════════════════
+           LEFT — BRAND + CALENDAR
+        ══════════════════════════════ */
+        .brand {
+            text-align:center; margin-bottom:28px;
+        }
+        .logo-wrap {
+            width:68px; height:68px; margin:0 auto 14px;
+            border-radius:50%; border:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center;
+            background: rgba(201,168,76,0.06);
+            font-family:'Cinzel',serif; font-size:36px; font-weight:700;
+            color:var(--gold); text-shadow:0 0 20px var(--gold);
+        }
+        .brand-img { max-width:54px; max-height:54px; object-fit:contain; filter:drop-shadow(0 0 6px var(--gold));}
+        .brand-name {
+            font-family:'Cinzel',serif; font-size:22px; font-weight:700;
+            color:var(--gold-bright); letter-spacing:3px;
+            text-shadow: 0 0 18px var(--gold-glow);
+        }
+        .brand-tagline { font-size:9px; letter-spacing:5px; color:var(--text-muted); margin-top:4px; }
+
+        /* Divider ornament */
+        .ornament {
+            display:flex; align-items:center; gap:8px;
+            margin:0 auto 22px; opacity:.5;
+            color:var(--gold-dim); font-size:11px; letter-spacing:2px;
+        }
+        .ornament::before, .ornament::after { content:''; flex:1; height:1px; background:var(--gold-dim); }
+
+        /* CALENDAR */
+        .cal-month {
+            font-family:'Cinzel',serif; font-size:15px; color:var(--gold-bright);
+            text-align:center; margin-bottom:14px; letter-spacing:2px;
+        }
+        .cal-grid {
+            display:grid; grid-template-columns:repeat(7,1fr);
+            gap:4px; text-align:center;
+        }
+        .cal-dname {
+            font-size:10px; font-weight:400; color:var(--gold); letter-spacing:1px;
+            padding-bottom:6px;
+        }
+        .cal-day {
+            font-size:12px; padding:6px 0; color:rgba(240,210,150,.65);
+            border-radius:3px; transition: all .2s;
+        }
+        .cal-day:not(:empty):hover { background: rgba(201,168,76,.12); color:var(--gold-bright); }
+        .cal-day.today {
+            background: linear-gradient(135deg, var(--gold) 0%, #a07828 100%);
+            color:#1a0e00; font-weight:700;
+            box-shadow: 0 0 12px rgba(201,168,76,.5);
+        }
+        .cal-day.weekend { color:rgba(201,168,76,.45); }
+
+        /* QUOTE */
+        .quote-block {
+            margin-top:auto; padding-top:18px;
+            border-top:1px solid var(--border);
+        }
+        .quote-text {
+            font-family:'Cormorant Garamond',serif; font-style:italic;
+            font-size:14px; line-height:1.7; color:rgba(240,210,150,.65);
+            text-align:center;
+        }
+        .quote-author { font-size:10px; letter-spacing:3px; color:var(--text-muted); text-align:center; margin-top:6px; }
+
+        /* ══════════════════════════════
+           CENTER — CLOCK
+        ══════════════════════════════ */
+        .center-col {
+            display:flex; flex-direction:column;
+            align-items:center; justify-content:center; gap:30px;
+        }
+
+        /* Analog clock */
+        .clock-ring {
+            position:relative;
+            width: min(38vh, 340px); height: min(38vh, 340px);
+        }
+        /* Outer glow ring */
+        .clock-ring::before {
+            content:''; position:absolute; inset:-12px; border-radius:50%;
+            border:1px solid rgba(201,168,76,.18);
+            box-shadow: 0 0 30px rgba(201,168,76,.08), inset 0 0 30px rgba(201,168,76,.04);
+        }
+        /* Second decorative ring */
+        .clock-ring::after {
+            content:''; position:absolute; inset:-4px; border-radius:50%;
+            border:1px solid rgba(201,168,76,.28);
+        }
+
+        .clock-svg {
+            width:100%; height:100%;
+            filter: drop-shadow(0 8px 24px rgba(0,0,0,.9));
+        }
+
+        /* Tick marks (pure CSS) */
+        .tick-wrap {
+            position:absolute; inset:0; border-radius:50%;
+        }
+        .tick-mark {
+            position:absolute; top:0; left:50%;
+            transform-origin: center 50%;
+        }
+        .tick-mark span {
+            display:block; margin-left:-1px;
+        }
+
+        /* Clock hands */
+        .hand-wrap {
+            position:absolute; inset:0; border-radius:50%;
+        }
+        .hand {
+            position:absolute; bottom:50%; left:50%;
+            transform-origin:bottom center;
+            transform:translateX(-50%) rotate(0deg);
+            border-radius:20px;
+        }
+        .hand-hour   { width:5px; height:25%; background:linear-gradient(to top, var(--gold-bright), rgba(255,255,255,.9)); margin-left:-2.5px; filter:drop-shadow(0 0 4px var(--gold)); }
+        .hand-minute { width:3px; height:35%; background:linear-gradient(to top, var(--gold), #ddd); margin-left:-1.5px; filter:drop-shadow(0 0 3px rgba(201,168,76,.6)); }
+        .hand-second { width:1.5px; height:38%; background:#e74c3c; margin-left:-.75px; bottom:40%; transform-origin:50% 80%; filter:drop-shadow(0 0 4px rgba(231,76,60,.8)); }
+        .pivot {
+            position:absolute; top:50%; left:50%;
+            transform:translate(-50%,-50%);
+            width:14px; height:14px; border-radius:50%;
+            background: radial-gradient(circle, var(--gold-bright) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+            box-shadow: 0 0 10px var(--gold); z-index:10;
+        }
+
+        /* Clock face (SVG-like circle rendered by canvas) */
+        .clock-face-elem {
+            position:absolute; inset:6%;
+            border-radius:50%;
+            background:
+                radial-gradient(circle at 40% 35%, rgba(255,255,255,.04) 0%, transparent 60%),
+                rgba(5,4,10,.7);
+            border:1px solid rgba(201,168,76,.18);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Roman numerals inside clock */
+        .roman {
+            position:absolute; font-family:'Cinzel',serif;
+            font-size:clamp(10px,1.5vw,16px); color:var(--gold-bright);
+            transform:translate(-50%,-50%);
+            text-shadow:0 0 8px rgba(201,168,76,.5);
+            font-weight:600;
+        }
+
+        /* Digital time strip */
+        .digital-strip {
+            text-align:center;
+            background: rgba(5,4,10,.75);
+            border: 1px solid var(--border);
+            border-radius:4px;
+            padding: 14px 40px 12px;
+            position:relative;
+            overflow:hidden;
+        }
+        .digital-strip::before {
+            content:''; position:absolute; top:0; left:20%; right:20%; height:1px;
+            background:linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+        .digi-time {
+            font-family:'Josefin Sans',sans-serif; font-weight:100;
+            font-size:clamp(28px,4vw,44px); letter-spacing:6px;
+            color:var(--gold-bright);
+            text-shadow: 0 0 20px rgba(201,168,76,.4);
+        }
+        .digi-sep { opacity:.3; animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:.9} }
+        .digi-date {
+            font-size:11px; letter-spacing:3px; color:var(--text-muted);
+            margin-top:6px; text-transform:uppercase;
+        }
+        .digi-day {
+            font-family:'Cinzel',serif; font-size:13px; color:var(--gold);
+            letter-spacing:3px; margin-top:2px;
+        }
+
+        /* ══════════════════════════════
+           RIGHT — WEATHER
+        ══════════════════════════════ */
+        .weather-panel { justify-content:space-between; }
+
+        .w-city {
+            font-family:'Cinzel',serif; font-size:14px; letter-spacing:3px;
+            color:var(--gold-bright); text-align:center; margin-bottom:4px;
+        }
+        .w-coords { font-size:9px; letter-spacing:2px; color:var(--text-muted); text-align:center; margin-bottom:20px; }
+
+        .w-main { text-align:center; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .w-icon-wrap {
+            width:90px; height:90px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            background: radial-gradient(circle, rgba(201,168,76,.08) 0%, transparent 70%);
+            border:1px solid rgba(201,168,76,.15);
+            font-size:48px; margin-bottom:14px;
+            box-shadow: 0 0 30px rgba(201,168,76,.06), inset 0 0 20px rgba(0,0,0,.5);
+            transition: all .5s ease;
+        }
+        .w-temp-val {
+            font-family:'Cormorant Garamond',serif; font-weight:300;
+            font-size:clamp(54px,7vw,82px); line-height:1; color:#fff;
+            text-shadow:0 0 30px rgba(255,255,255,.15);
+        }
+        .w-temp-unit { font-size:28px; color:var(--gold); vertical-align:super; }
+        .w-desc-text {
+            font-size:13px; letter-spacing:3px; color:var(--gold);
+            text-transform:uppercase; margin-top:10px;
+        }
+
+        .w-divider {
+            display:flex; align-items:center; gap:8px;
+            margin:16px 0 14px; opacity:.35; color:var(--gold-dim); font-size:9px;
+        }
+        .w-divider::before, .w-divider::after { content:''; flex:1; height:1px; background:var(--gold-dim); }
+
+        .w-stats { display:flex; flex-direction:column; gap:10px; }
+        .w-stat {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:10px 12px; background:rgba(255,255,255,.025); border-radius:3px;
+            border-left:2px solid var(--gold-dim);
+            transition: all .3s;
+        }
+        .w-stat:hover { background:rgba(201,168,76,.06); border-left-color:var(--gold); }
+        .w-stat-label { font-size:10px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; }
+        .w-stat-val { font-size:16px; font-weight:300; color:var(--cream); }
+        .w-stat-unit { font-size:10px; color:var(--gold); margin-left:2px; }
+
+        /* Animated progress bar for humidity */
+        .w-bar-wrap { height:3px; background:rgba(255,255,255,.08); border-radius:2px; margin-top:4px; }
+        .w-bar { height:100%; background:linear-gradient(to right, var(--gold-dim), var(--gold)); border-radius:2px; transition:width 1s ease; }
+
+        /* ══════════════════════════════
+           HEADER / FOOTER watermark
+        ══════════════════════════════ */
+        .watermark-top {
+            position:absolute; top:50px; left:50%; transform:translateX(-50%);
+            font-family:'Cinzel',serif; font-size:8px; letter-spacing:8px;
+            color:rgba(201,168,76,.18); white-space:nowrap; z-index:3;
+            text-transform:uppercase;
+        }
+        .watermark-bot {
+            position:absolute; bottom:50px; left:50%; transform:translateX(-50%);
+            font-family:'Josefin Sans',sans-serif; font-size:7px; letter-spacing:5px;
+            color:rgba(201,168,76,.15); white-space:nowrap; z-index:3;
+        }
+
+        /* ── SCANLINES subtle effect ── */
+        .scanlines {
+            position:absolute; inset:0; z-index:4; pointer-events:none;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px, transparent 2px,
+                rgba(0,0,0,.05) 2px, rgba(0,0,0,.05) 4px
+            );
+            opacity:.35;
+        }
+
+        /* ── Entry animations ── */
+        @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+        .panel { animation: fadeUp .8s ease both; }
+        .panel:nth-child(1) { animation-delay:.1s; }
+        .panel:nth-child(3) { animation-delay:.2s; }
+        .center-col { animation: fadeUp .9s ease .05s both; }
+    </style>
+</head>
+<body>
+
+<div class="frame-wrap">
+    <div class="frame-wood">
+        <div class="frame-gold"></div>
+    </div>
+
+    <div class="canvas">
+        <!-- Background -->
+        <div class="slideshow">
+            <div class="slide"></div>
+            <div class="slide"></div>
+            <div class="slide"></div>
+        </div>
+        <div class="overlay"></div>
+        <div class="scanlines"></div>
+
+        <!-- Watermarks -->
+        <div class="watermark-top">Bürotarz Corporate Edition</div>
+        <div class="watermark-bot">Est. MMXXV &nbsp;·&nbsp; Premium Workspace Series</div>
+
+        <!-- MAIN UI -->
+        <div class="ui">
+
+            <!-- ═══ LEFT PANEL ═══ -->
+            <div class="panel">
+                <div class="brand">
+                    <div class="logo-wrap">
+                        <img src="file:///C:/wallpaper/LOGO.png" alt="" class="brand-img"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                        <span style="display:none">B</span>
+                    </div>
+                    <div class="brand-name">Bürotarz</div>
+                    <div class="brand-tagline">® CORPORATE EDITION</div>
+                </div>
+
+                <div class="ornament">✦</div>
+
+                <div class="cal-month" id="calMonth">—</div>
+                <div class="cal-grid" id="calGrid"></div>
+
+                <div class="quote-block">
+                    <div class="quote-text" id="quoteText">"Başarı, hazırlık fırsatla buluştuğunda ortaya çıkar."</div>
+                    <div class="quote-author" id="quoteAuthor">— Seneca</div>
+                </div>
+            </div>
+
+            <!-- ═══ CENTER ═══ -->
+            <div class="center-col">
+                <!-- Analog Clock -->
+                <div class="clock-ring">
+                    <div class="clock-face-elem"></div>
+
+                    <!-- Tick marks (JS rendered) -->
+                    <div class="tick-wrap" id="tickWrap"></div>
+
+                    <!-- Roman numerals -->
+                    <div class="roman" id="rn12" style="top:9%;left:50%">XII</div>
+                    <div class="roman" id="rn3"  style="top:50%;right:4%">III</div>
+                    <div class="roman" id="rn6"  style="bottom:6%;left:50%">VI</div>
+                    <div class="roman" id="rn9"  style="top:50%;left:5%">IX</div>
+
+                    <!-- Hands -->
+                    <div class="hand-wrap">
+                        <div class="hand hand-hour"   id="hourHand"></div>
+                        <div class="hand hand-minute" id="minHand"></div>
+                        <div class="hand hand-second" id="secHand"></div>
+                        <div class="pivot"></div>
+                    </div>
+                </div>
+
+                <!-- Digital strip -->
+                <div class="digital-strip">
+                    <div class="digi-time">
+                        <span id="dH">00</span><span class="digi-sep">:</span><span id="dM">00</span><span class="digi-sep">:</span><span id="dS">00</span>
+                    </div>
+                    <div class="digi-day" id="digiDay">—</div>
+                    <div class="digi-date" id="digiDate">—</div>
+                </div>
+            </div>
+
+            <!-- ═══ RIGHT PANEL — WEATHER ═══ -->
+            <div class="panel weather-panel">
+                <div class="panel-title">Hava Durumu</div>
+                <div class="w-city">TRABZON / BEŞİRLİ</div>
+                <div class="w-coords">41.005°N &nbsp;39.680°E</div>
+
+                <div class="w-main">
+                    <div class="w-icon-wrap" id="wIcon">⏳</div>
+                    <div class="w-temp-val"><span id="wTemp">--</span><span class="w-temp-unit">°C</span></div>
+                    <div class="w-desc-text" id="wDesc">Güncelleniyor</div>
+                </div>
+
+                <div class="w-divider">✦</div>
+
+                <div class="w-stats">
+                    <div class="w-stat">
+                        <span class="w-stat-label">Hissedilen</span>
+                        <span class="w-stat-val" id="wFeels">--<span class="w-stat-unit">°C</span></span>
+                    </div>
+                    <div>
+                        <div class="w-stat">
+                            <span class="w-stat-label">Nem Oranı</span>
+                            <span class="w-stat-val" id="wHum">--<span class="w-stat-unit">%</span></span>
+                        </div>
+                        <div class="w-bar-wrap"><div class="w-bar" id="wHumBar" style="width:0%"></div></div>
+                    </div>
+                    <div class="w-stat">
+                        <span class="w-stat-label">Rüzgar</span>
+                        <span class="w-stat-val" id="wWind">--<span class="w-stat-unit">km/s</span></span>
+                    </div>
+                    <div class="w-stat">
+                        <span class="w-stat-label">Son Güncelleme</span>
+                        <span class="w-stat-val" style="font-size:13px" id="wUpdate">—</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+/* ── TICK MARKS ── */
+(function buildTicks() {
+    const wrap = document.getElementById('tickWrap');
+    const R = wrap.offsetWidth / 2 || 170;
+    for(let i=0;i<60;i++){
+        const div = document.createElement('div');
+        div.style.cssText = `
+            position:absolute; top:0; left:50%;
+            transform-origin:0 ${R}px;
+            transform:rotate(${i*6}deg) translateX(-50%);
+            width:${i%5===0?3:1}px;
+            height:${i%5===0?14:8}px;
+            background:${i%5===0?'rgba(201,168,76,.7)':'rgba(201,168,76,.2)'};
+            margin-top:${i%5===0?10:13}px;
+        `;
+        wrap.appendChild(div);
+    }
+})();
+
+/* ── CLOCK ── */
+function tick(){
+    const now = new Date();
+    const s = now.getSeconds(), m = now.getMinutes(), h = now.getHours();
+    document.getElementById('secHand').style.transform  = `translateX(-50%) rotate(${s*6}deg)`;
+    document.getElementById('minHand').style.transform  = `translateX(-50%) rotate(${m*6+s*.1}deg)`;
+    document.getElementById('hourHand').style.transform = `translateX(-50%) rotate(${(h%12)*30+m*.5}deg)`;
+
+    const p = v => String(v).padStart(2,'0');
+    document.getElementById('dH').textContent = p(h);
+    document.getElementById('dM').textContent = p(m);
+    document.getElementById('dS').textContent = p(s);
+
+    const days   = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+    const months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+    document.getElementById('digiDay').textContent  = days[now.getDay()];
+    document.getElementById('digiDate').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+setInterval(tick,1000); tick();
+
+/* ── CALENDAR ── */
+function renderCal(){
+    const now   = new Date(), y=now.getFullYear(), mo=now.getMonth(), tod=now.getDate();
+    const months= ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+    document.getElementById('calMonth').textContent = months[mo] + ' ' + y;
+    const grid = document.getElementById('calGrid'); grid.innerHTML='';
+    ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'].forEach(d=>{
+        grid.innerHTML+=`<div class="cal-dname">${d}</div>`;
+    });
+    const first = new Date(y,mo,1).getDay();
+    const start = first===0?6:first-1;
+    const total = new Date(y,mo+1,0).getDate();
+    for(let i=0;i<start;i++) grid.innerHTML+='<div></div>';
+    for(let d=1;d<=total;d++){
+        const dow = new Date(y,mo,d).getDay();
+        const wknd= dow===0||dow===6?'weekend':'';
+        const tdy = d===tod?'today':'';
+        grid.innerHTML+=`<div class="cal-day ${wknd} ${tdy}">${d}</div>`;
+    }
+}
+renderCal();
+setInterval(renderCal,3600000);
+
+/* ── WEATHER ── */
+const WMO = {
+    0:  ['☀️','Açık / Güneşli'],
+    1:  ['🌤️','Az Bulutlu'],
+    2:  ['⛅','Parçalı Bulutlu'],
+    3:  ['☁️','Kapalı'],
+    45: ['🌫️','Sisli'],
+    48: ['🌫️','Kırağılı Sis'],
+    51: ['🌦️','Hafif Çisenti'],
+    53: ['🌦️','Orta Çisenti'],
+    55: ['🌧️','Yoğun Çisenti'],
+    61: ['🌧️','Hafif Yağmur'],
+    63: ['🌧️','Yağmurlu'],
+    65: ['🌧️','Şiddetli Yağmur'],
+    71: ['❄️','Hafif Kar'],
+    73: ['❄️','Kar Yağışlı'],
+    75: ['❄️','Yoğun Kar'],
+    80: ['🌦️','Sağanak'],
+    95: ['⛈️','Fırtınalı'],
+    99: ['⛈️','Şiddetli Fırtına']
+};
+async function fetchWeather(){
+    try {
+        const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=41.005&longitude=39.680&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto');
+        const d = await r.json(), c = d.current;
+        const code = c.weather_code;
+        const [icon, desc] = WMO[code] || WMO[Math.floor(code/10)*10] || ['🌡️','Bilinmiyor'];
+        document.getElementById('wIcon').textContent  = icon;
+        document.getElementById('wTemp').textContent  = Math.round(c.temperature_2m);
+        document.getElementById('wDesc').textContent  = desc;
+        document.getElementById('wFeels').innerHTML   = Math.round(c.apparent_temperature)+'<span class="w-stat-unit">°C</span>';
+        document.getElementById('wHum').innerHTML     = c.relative_humidity_2m+'<span class="w-stat-unit">%</span>';
+        document.getElementById('wHumBar').style.width= c.relative_humidity_2m+'%';
+        document.getElementById('wWind').innerHTML    = Math.round(c.wind_speed_10m)+'<span class="w-stat-unit">km/s</span>';
+        const now = new Date();
+        document.getElementById('wUpdate').textContent= now.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    } catch(e){
+        document.getElementById('wDesc').textContent='Bağlantı Hatası';
+    }
+}
+fetchWeather();
+setInterval(fetchWeather, 600000);
+
+/* ── ROTATING QUOTES ── */
+const quotes = [
+    {t:'"Başarı, hazırlık fırsatla buluştuğunda ortaya çıkar."', a:'— Seneca'},
+    {t:'"Büyük işler, küçük adımlarla başlar."', a:'— Lao Tzu'},
+    {t:'"Zaman, harcamadığımız en değerli şeydir."', a:'— Henry Ford'},
+    {t:'"Disiplin, özgürlüğün temelidir."', a:'— Aristoteles'},
+    {t:'"Kalite bir eylem değil, bir alışkanlıktır."', a:'— Aristoteles'},
+];
+let qi=0;
+function rotateQuote(){
+    const el=document.getElementById('quoteText'), ea=document.getElementById('quoteAuthor');
+    el.style.opacity=ea.style.opacity='0';
+    el.style.transition=ea.style.transition='opacity .8s ease';
+    setTimeout(()=>{
+        qi=(qi+1)%quotes.length;
+        el.textContent=quotes[qi].t;
+        ea.textContent=quotes[qi].a;
+        el.style.opacity=ea.style.opacity='1';
+    },850);
+}
+setInterval(rotateQuote,8000);
+</script>
+</body>
+</html>
