@@ -3,218 +3,457 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bürotarz - Masterpiece Wall OS (Ultimate TV Edition)</title>
+    <title>Bürotarz Wall OS HAKAN KARABAK</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Montserrat:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-box-sizing: border-box; user-select: none; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
 
         body {
             background-color: #000;
             font-family: 'Montserrat', sans-serif;
-            color: #FFF;
+            color: #F0EDE8;
             overflow: hidden;
             height: 100vh;
             width: 100vw;
         }
 
-        /* --- GPU HIZLANDIRMALI ARKA PLAN MOTORU (Z-Index Hatası Düzeltildi) --- */
-        #bg-engine { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; background: #000; }
+        /* ─── ARKA PLAN MOTORİ (inset:0 yerine top,left,right,bottom kullanıldı) ─── */
+        #bg-engine { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; background: #000; }
         .bg-layer {
-            position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center;
-            opacity: 0; 
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-size: cover; background-position: center;
+            opacity: 0;
             -webkit-transform: scale3d(1, 1, 1);
             transform: scale3d(1, 1, 1);
-            -webkit-transition: opacity 2s ease-in-out, -webkit-transform 30s linear;
-            transition: opacity 2s ease-in-out, transform 30s linear; 
-            -webkit-filter: brightness(0.7) contrast(1.1);
-            filter: brightness(0.7) contrast(1.1);
+            -webkit-transition: opacity 2.5s ease-in-out, -webkit-transform 35s linear;
+            transition: opacity 2.5s ease-in-out, transform 35s linear;
+            -webkit-filter: brightness(0.55) contrast(1.1) saturate(0.9);
+            filter: brightness(0.55) contrast(1.1) saturate(0.9);
         }
-        .bg-layer-active { opacity: 1; -webkit-transform: scale3d(1.08, 1.08, 1); transform: scale3d(1.08, 1.08, 1); }
-        .bg-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; background: rgba(0,0,0,0.6); }
+        .bg-layer-active { 
+            opacity: 1; 
+            -webkit-transform: scale3d(1.08, 1.08, 1);
+            transform: scale3d(1.08, 1.08, 1); 
+        }
 
-        /* --- TAM EKRAN BUTONU --- */
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 2;
+            background: -webkit-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 30%, rgba(0,0,0,0.75) 100%);
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.75) 100%);
+        }
+        .bg-overlay::after {
+            content: '';
+            position: fixed; bottom: 0; left: 0; right: 0; height: 3px; z-index: 3;
+            background: -webkit-linear-gradient(left, transparent, #D4AF5A, transparent);
+            background: linear-gradient(90deg, transparent, #D4AF5A, transparent);
+        }
+
+        /* ─── TAM EKRAN BUTONU ─── */
         #fs-btn {
-            position: fixed; top: 30px; right: 30px; z-index: 999;
-            width: 50px; height: 50px; background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.3); border-radius: 10px;
-            color: #aaa; font-size: 26px; text-align: center; line-height: 50px;
-            cursor: pointer; transition: all 0.3s ease; -webkit-transition: all 0.3s ease;
+            position: fixed; top: 24px; right: 24px; z-index: 999;
+            width: 44px; height: 44px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(212,175,90,0.3);
+            border-radius: 10px;
+            color: #D4AF5A;
+            font-size: 22px; text-align: center; line-height: 44px;
+            cursor: pointer; transition: all 0.3s ease;
         }
-        #fs-btn:hover, #fs-btn:focus { color: #FFF; border-color: #E5C158; background: rgba(0,0,0,0.8); }
+        #fs-btn:hover { border-color: #D4AF5A; background: rgba(0,0,0,0.9); color: #F0D080; }
 
-        /* --- ANA SABİT KAFES --- */
+        /* ─── ANA KAFES ─── */
         #app-core {
-            position: absolute; width: 1880px; height: 960px; left: 50%; top: 50%;
+            position: absolute; width: 1880px; height: 960px;
+            left: 50%; top: 50%;
             margin-left: -940px; margin-top: -480px;
-            transform-origin: center center; -webkit-transform-origin: center center;
-            z-index: 10; /* Arka planın üstünde kalması için eklendi */
+            -webkit-transform-origin: center center;
+            transform-origin: center center;
+            z-index: 10;
         }
 
-        /* --- GLASS PANELS (Ortak Özellikler) --- */
+        /* ─── LOGO ─── */
+        .header-brand {
+            position: absolute; top: 22px; left: 50%; 
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            z-index: 20; text-align: center;
+        }
+        .header-brand img {
+            height: 72px;
+            -webkit-filter: drop-shadow(0 4px 20px rgba(0,0,0,0.9));
+            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.9));
+        }
+        .brand-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px; letter-spacing: 10px; color: #D4AF5A;
+            margin-top: 4px; text-transform: uppercase; text-align: center;
+        }
+
+        /* ─── GLASS PANEL ─── */
         .glass-panel {
-            background: rgba(10, 15, 20, 0.75); border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15); border-top: 1px solid rgba(255,255,255,0.3);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); -webkit-box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            background: rgba(5, 10, 18, 0.82);
+            border-radius: 22px;
+            border: 1px solid rgba(212, 175, 90, 0.18);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08);
             position: absolute; height: 960px; overflow: hidden;
         }
-
-        /* --- BAŞLIK --- */
-        .header-brand { position: absolute; top: 30px; left: 50%; margin-left: -300px; width: 600px; text-align: center; z-index: 10; }
-        .brand-title { font-family: 'Cinzel', serif; font-size: 38px; letter-spacing: 22px; color: #FFF; text-shadow: 0 10px 20px rgba(0,0,0,0.9); font-weight: 900; }
-        .brand-sub { font-family: 'Rajdhani', sans-serif; font-size: 15px; letter-spacing: 12px; color: #E5C158; margin-top: 5px; text-transform: uppercase; }
-
-        /* --- SOL PANEL (HABER + TAKVİM) --- */
-        .panel-left { left: 0; top: 0; width: 480px; }
-        .module-header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; overflow: hidden; position: absolute; left: 35px; width: 410px; }
-        .mh-news { top: 35px; }
-        .mh-calendar { top: 620px; } 
-        
-        .module-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; letter-spacing: 4px; font-weight: 700; color: #E0E0E0; text-transform: uppercase; float: left; }
-        .live-dot { width: 12px; height: 12px; background: #FF3B30; border-radius: 50%; box-shadow: 0 0 15px #FF3B30; display: inline-block; vertical-align: middle; margin-right: 8px; margin-top: -3px; animation: pulse 2s infinite; -webkit-animation: pulse 2s infinite;}
-        
-        .news-wrapper { position: absolute; top: 90px; left: 35px; width: 410px; height: 500px; overflow: hidden; }
-        .news-track { position: absolute; top: 0; left: 0; width: 100%; transition: opacity 0.6s ease; -webkit-transition: opacity 0.6s ease; }
-        .news-card { background: rgba(255,255,255,0.06); border-left: 4px solid #E5C158; border-radius: 12px; padding: 25px; position: relative; margin-bottom: 20px; display: block; }
-        .news-source { font-size: 11px; letter-spacing: 3px; color: #E5C158; font-weight: 700; margin-bottom: 10px; display: block; }
-        .news-headline { font-size: 16px; line-height: 1.5; font-weight: 500; color: #FFF; display: block; }
-        .news-time { font-size: 12px; color: #999; position: absolute; top: 25px; right: 25px; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
-
-        .calendar-board { position: absolute; top: 670px; left: 35px; width: 410px; background: rgba(0,0,0,0.4); border-radius: 15px; border: 1px solid rgba(255,255,255,0.08); padding: 35px 20px; text-align: center; }
-        .cal-day-num { font-family: 'Teko', sans-serif; font-size: 110px; line-height: 90px; font-weight: 500; color: #E5C158; text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .cal-month-year { font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 700; color: #FFF; letter-spacing: 6px; margin-top: 15px; }
-        .cal-day-name { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 500; color: #888; letter-spacing: 8px; margin-top: 5px; text-transform: uppercase; }
-
-        /* --- ORTA PANEL: SAAT --- */
-        .panel-center { position: absolute; left: 520px; top: 0; width: 840px; height: 960px; }
-        .real-wall-clock {
-            width: 500px; height: 500px; border-radius: 50%; background: #888;
-            background: -webkit-linear-gradient(135deg, #e0e0e0, #888, #444, #888, #e0e0e0);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.8);
-            position: absolute; left: 50%; top: 160px; margin-left: -250px;
+        .glass-panel::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 22px;
+            background: -webkit-linear-gradient(-45deg, rgba(212,175,90,0.04) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(212,175,90,0.04) 0%, transparent 50%);
+            pointer-events: none;
         }
-        .clock-face-inner {
-            width: 460px; height: 460px; border-radius: 50%; background: #FAFAFA;
-            box-shadow: inset 0 10px 30px rgba(0,0,0,0.4), inset 0 -5px 15px rgba(255,255,255,0.5);
-            position: absolute; top: 20px; left: 20px; overflow: hidden;
+
+        /* ─── SOL PANEL ─── */
+        .panel-left { left: 0; top: 0; width: 480px; }
+
+        .module-header {
+            border-bottom: 1px solid rgba(212,175,90,0.15);
+            padding: 0 35px 15px;
+            position: absolute; left: 0; width: 100%;
+        }
+        .mh-cal   { top: 30px; }
+        .mh-news  { top: 390px; }
+
+        .module-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px; letter-spacing: 4px; font-weight: 700;
+            color: #8A8070; text-transform: uppercase;
+            display: flex; align-items: center;
+        }
+        .module-title span, .module-title div { margin-right: 8px; }
+        .module-title .accent { color: #D4AF5A; }
+        .live-dot {
+            width: 8px; height: 8px; background: #F87171; border-radius: 50%;
+            box-shadow: 0 0 8px #F87171; flex-shrink: 0;
+            -webkit-animation: blink 2s ease-in-out infinite;
+            animation: blink 2s ease-in-out infinite;
+        }
+        .live-dot.green { background: #4ADE80; box-shadow: 0 0 8px #4ADE80; }
+
+        /* ─── TAKVİM ─── */
+        .calendar-board {
+            position: absolute; top: 80px; left: 35px; width: 410px;
+            background: -webkit-linear-gradient(-45deg, rgba(0,0,0,0.6) 0%, rgba(10,8,5,0.4) 100%);
+            background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(10,8,5,0.4) 100%);
+            border-radius: 18px;
+            border: 1px solid rgba(212,175,90,0.12);
+            padding: 30px 35px 28px;
+            display: flex; align-items: center;
+        }
+        .cal-left { flex: 1; }
+        .cal-day-num {
+            font-family: 'Teko', sans-serif;
+            font-size: 100px; line-height: 0.85; font-weight: 500;
+            color: #D4AF5A;
+            text-shadow: 0 0 40px rgba(212,175,90,0.3);
+        }
+        .cal-day-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px; font-weight: 700;
+            color: #8A8070; letter-spacing: 5px; margin-top: 10px;
+        }
+        .cal-right { text-align: right; width: 140px; }
+        .cal-month {
+            font-family: 'Cinzel', serif;
+            font-size: 22px; font-weight: 700; color: #F0EDE8;
+            letter-spacing: 3px; line-height: 1.2;
+        }
+        .cal-year {
+            font-family: 'Teko', sans-serif;
+            font-size: 36px; color: #8A8070; letter-spacing: 2px;
+        }
+        .cal-divider {
+            width: 1px; height: 100px;
+            background: -webkit-linear-gradient(top, transparent, #9A7C35, transparent);
+            background: linear-gradient(to bottom, transparent, #9A7C35, transparent);
+            margin: 0 25px;
+        }
+
+        /* Haftanın günleri mini */
+        .cal-week-row {
+            position: absolute; top: 282px; left: 35px; width: 410px;
+            display: flex; justify-content: space-between;
+        }
+        .cal-wday {
+            width: 13%; text-align: center; padding: 8px 0;
+            font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700;
+            letter-spacing: 1px; color: #8A8070;
+            background: rgba(255,255,255,0.04); border-radius: 8px;
+            border: 1px solid transparent;
+        }
+        .cal-wday.today {
+            color: #D4AF5A; background: rgba(212,175,90,0.1);
+            border-color: rgba(212,175,90,0.25);
+        }
+
+        /* ─── HABERLER ─── */
+        .news-wrapper {
+            position: absolute; top: 430px; left: 35px; width: 410px;
+            height: 495px; overflow: hidden;
+        }
+        .news-track { -webkit-transition: opacity 0.6s ease; transition: opacity 0.6s ease; }
+        .news-card {
+            background: -webkit-linear-gradient(-45deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border-left: 3px solid #9A7C35;
+            border-radius: 12px; padding: 18px 20px;
+            margin-bottom: 14px; position: relative;
+        }
+        .news-source {
+            font-size: 10px; letter-spacing: 3px; color: #D4AF5A;
+            font-weight: 700; margin-bottom: 8px; display: block;
+        }
+        .news-headline {
+            font-size: 13.5px; line-height: 1.55; font-weight: 500;
+            color: #F0EDE8; display: block;
+        }
+        .news-time {
+            font-size: 11px; color: #8A8070;
+            position: absolute; top: 18px; right: 18px;
+            font-family: 'Rajdhani', sans-serif; font-weight: 600;
+        }
+
+        /* ─── ORTA PANEL ─── */
+        .panel-center {
+            position: absolute; left: 520px; top: 0;
+            width: 840px; height: 960px;
+        }
+
+        /* ─── ANALOG SAAT (Conic-gradient iptal, linear uyumlu) ─── */
+        .clock-outer-ring {
+            width: 510px; height: 510px;
+            border-radius: 50%;
+            background: -webkit-linear-gradient(45deg, #2a2218, #D4AF5A, #2a2218, #D4AF5A, #2a2218);
+            background: linear-gradient(45deg, #2a2218, #D4AF5A, #2a2218, #D4AF5A, #2a2218);
+            box-shadow: 0 0 0 2px rgba(212,175,90,0.1), 0 30px 80px rgba(0,0,0,0.9), 0 0 60px rgba(212,175,90,0.15), inset 0 2px 8px rgba(255,255,255,0.3);
+            position: absolute; left: 50%; top: 140px; margin-left: -255px;
+        }
+        .clock-middle-ring {
+            width: 484px; height: 484px; border-radius: 50%;
+            background: -webkit-linear-gradient(305deg, #1a1208, #0d0a05);
+            background: linear-gradient(145deg, #1a1208, #0d0a05);
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.9), inset 0 -2px 6px rgba(212,175,90,0.1);
+            position: absolute; top: 13px; left: 13px;
+        }
+        .clock-face {
+            width: 454px; height: 454px; border-radius: 50%;
+            background: #E8E0D0;
+            box-shadow: inset 0 8px 25px rgba(0,0,0,0.35), inset 0 -5px 15px rgba(255,255,255,0.6);
+            position: absolute; top: 15px; left: 15px; overflow: visible;
         }
         .clock-markers { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
-        .c-marker { position: absolute; background: #222; left: 50%; top: 50%; }
-        .clock-brand { position: absolute; top: 110px; width: 100%; text-align: center; }
-        .c-brand-name { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 900; letter-spacing: 6px; color: #222; }
-        .c-brand-sub { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 4px; color: #666; margin-top: 5px; }
+        .c-marker { position: absolute; left: 50%; top: 50%; }
 
-        .c-hand-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
-        .c-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; -webkit-transform-origin: bottom center; border-radius: 10px 10px 0 0; box-shadow: 2px 5px 10px rgba(0,0,0,0.3); }
-        .c-hour { width: 16px; height: 130px; margin-left: -8px; background: #111; }
-        .c-minute { width: 10px; height: 190px; margin-left: -5px; background: #111; }
-        .c-second { width: 4px; height: 210px; margin-left: -2px; background: #FF3B30; border-radius: 4px; }
-        .c-second::after { content: ''; position: absolute; bottom: -40px; left: 0; width: 4px; height: 40px; background: #FF3B30; border-radius: 4px; }
-        .c-pin { position: absolute; top: 50%; left: 50%; width: 24px; height: 24px; background: #FF3B30; border-radius: 50%; margin-left: -12px; margin-top:-12px; z-index: 20; border: 4px solid #111; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        
+        .clock-roman-nums {
+            position: absolute; top:0; left:0; right:0; bottom:0; border-radius: 50%;
+        }
+        .rom-num {
+            position: absolute; font-family: 'Cinzel', serif;
+            font-size: 16px; font-weight: 700; color: #1a1208;
+            -webkit-transform-origin: center; transform-origin: center;
+        }
+
+        .clock-brand-center {
+            position: absolute; width: 100%; text-align: center; top: 150px;
+        }
+        .c-brand-name {
+            font-family: 'Cinzel', serif; font-size: 18px;
+            font-weight: 900; letter-spacing: 6px; color: #1a1208;
+        }
+        .c-brand-sub {
+            font-family: 'Montserrat', sans-serif; font-size: 8px;
+            font-weight: 600; letter-spacing: 3px; color: #6a5a40; margin-top: 3px;
+        }
+
+        /* Eller */
+        .c-hand-layer { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 10; }
+        .c-hand {
+            position: absolute; bottom: 50%; left: 50%;
+            -webkit-transform-origin: bottom center;
+            transform-origin: bottom center;
+            border-radius: 4px 4px 2px 2px;
+        }
+        .c-hour {
+            width: 12px; height: 120px; margin-left: -6px;
+            background: #2a2010;
+            box-shadow: 2px 3px 8px rgba(0,0,0,0.4);
+            border-radius: 5px 5px 3px 3px;
+        }
+        .c-minute {
+            width: 7px; height: 175px; margin-left: -3.5px;
+            background: #1a1208;
+            box-shadow: 1px 3px 6px rgba(0,0,0,0.35);
+        }
+        .c-second {
+            width: 2px; height: 195px; margin-left: -1px;
+            background: #C0392B;
+            border-radius: 2px 2px 0 0;
+        }
+        .c-second::after {
+            content: '';
+            position: absolute; bottom: -50px; left: -3px;
+            width: 8px; height: 50px; background: #C0392B; border-radius: 2px;
+        }
+        .c-pin {
+            position: absolute; top: 50%; left: 50%;
+            width: 18px; height: 18px; border-radius: 50%;
+            margin: -9px 0 0 -9px; z-index: 20;
+            background: #D4AF5A;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 10px rgba(212,175,90,0.5);
+            border: 2px solid #0a0806;
+        }
+
+        /* Dijital kutu */
         .digital-clock-box {
-            background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.15);
-            padding: 15px 0; border-radius: 15px; text-align: center;
-            font-family: 'Teko', sans-serif; font-size: 65px; font-weight: 500; color: #FFF;
-            letter-spacing: 6px; box-shadow: 0 15px 30px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.8);
-            position: absolute; left: 50%; bottom: 130px; width: 340px; margin-left: -170px;
+            background: rgba(0,0,0,0.85);
+            border: 1px solid rgba(212,175,90,0.2);
+            border-top: 1px solid rgba(212,175,90,0.35);
+            padding: 14px 0; border-radius: 16px;
+            text-align: center;
+            font-family: 'Teko', sans-serif; font-size: 58px;
+            font-weight: 500; color: #FFF; letter-spacing: 6px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 0 30px rgba(0,0,0,0.9);
+            position: absolute; left: 50%; bottom: 110px;
+            width: 320px; margin-left: -160px;
         }
-        .digi-blink { animation: pulse 2s infinite; -webkit-animation: pulse 2s infinite; color: #E5C158; margin: 0 5px; }
-        .digi-sec { font-size: 35px; color: #999; margin-left: 10px; }
+        .digi-blink { -webkit-animation: blink 2s ease-in-out infinite; animation: blink 2s ease-in-out infinite; color: #D4AF5A; margin: 0 4px; }
+        .digi-sec { font-size: 32px; color: #555; margin-left: 8px; }
 
-        /* --- SAĞ PANEL --- */
+        /* ─── SAĞ PANEL ─── */
         .panel-right { right: 0; top: 0; width: 480px; }
-        .weather-board { position: absolute; top: 90px; left: 35px; width: 410px; background: rgba(0,0,0,0.4); border-radius: 15px; border: 1px solid rgba(255,255,255,0.08); padding: 30px; }
-        .w-loc { font-family: 'Rajdhani', sans-serif; font-size: 15px; color: #E5C158; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; }
-        
-        .w-main { overflow: hidden; margin: 20px 0; }
-        .w-main-left { float: left; }
-        .w-main-right { float: right; font-size: 85px; line-height: 110px; }
-        .w-temp { font-family: 'Teko', sans-serif; font-size: 110px; line-height: 0.8; font-weight: 500; }
-        .w-desc { font-size: 20px; font-weight: 500; color: #E0E0E0; margin-top: 10px; }
-        
-        .w-details { overflow: hidden; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 25px; }
-        .w-det-item { float: left; width: 50%; margin-bottom: 20px; }
-        .w-det-icon { float: left; font-size: 20px; margin-right: 12px; color: #E5C158; line-height: 25px; }
-        .w-det-text { float: left; }
-        .w-det-val { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #FFF; line-height: 20px;}
-        .w-det-lbl { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;}
 
-        .finance-title-container { position: absolute; bottom: 350px; left: 35px; width: 410px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-        .finance-board { 
-            position: absolute; bottom: 35px; left: 35px; width: 410px;
-            transition: opacity 0.4s ease; -webkit-transition: opacity 0.4s ease;
+        /* Hava Durumu */
+        .weather-board {
+            position: absolute; top: 80px; left: 35px; width: 410px;
+            background: -webkit-linear-gradient(-45deg, rgba(0,0,0,0.55) 0%, rgba(10,8,5,0.35) 100%);
+            background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(10,8,5,0.35) 100%);
+            border-radius: 18px; border: 1px solid rgba(212,175,90,0.1);
+            padding: 28px 30px;
         }
+        .w-loc {
+            font-family: 'Rajdhani', sans-serif; font-size: 11px;
+            color: #D4AF5A; letter-spacing: 6px; font-weight: 700; text-transform: uppercase;
+        }
+        .w-main { display: flex; justify-content: space-between; align-items: flex-end; margin: 18px 0 22px; }
+        .w-temp {
+            font-family: 'Teko', sans-serif; font-size: 96px;
+            line-height: 0.8; font-weight: 500; color: #F0EDE8;
+        }
+        .w-temp sup { font-size: 36px; vertical-align: top; margin-top: 15px; }
+        .w-desc {
+            font-size: 14px; font-weight: 600; color: #C0B898;
+            margin-top: 10px; letter-spacing: 2px; text-transform: uppercase;
+        }
+        .w-icon { font-size: 70px; line-height: 1; }
         
+        /* GRID KALDIRILDI - INLINE BLOCK YAPILDI */
+        .w-details { border-top: 1px solid rgba(212,175,90,0.1); padding-top: 20px; font-size: 0; }
+        .w-det-item { display: inline-block; width: 50%; margin-bottom: 15px; font-size: 14px; }
+        .w-det-icon { display: inline-block; font-size: 18px; width: 28px; text-align: center; vertical-align: top; }
+        .w-det-text { display: inline-block; vertical-align: top; }
+        .w-det-val { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #F0EDE8; line-height: 1; }
+        .w-det-lbl { font-size: 10px; color: #8A8070; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+
+        /* Finans */
+        .finance-section {
+            position: absolute; bottom: 30px; left: 35px; width: 410px;
+        }
+        .fin-header {
+            border-bottom: 1px solid rgba(212,175,90,0.15);
+            padding-bottom: 14px; margin-bottom: 16px;
+        }
+
         .fin-card {
-            background: #111; background: -webkit-linear-gradient(left, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 22px 25px;
-            position: relative; margin-top: 15px; overflow: hidden; height: 90px;
+            background: -webkit-linear-gradient(-45deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.4) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 16px 20px;
+            margin-bottom: 12px; position: relative;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .fin-card::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 6px; border-radius: 15px 0 0 15px; }
-        .fin-card-up::before { background: #34C759; box-shadow: 0 0 10px #34C759; }
-        .fin-card-down::before { background: #FF3B30; box-shadow: 0 0 10px #FF3B30; }
-        
-        .fin-symbol { float: left; margin-top: 8px; }
-        .fin-icon { float: left; font-size: 28px; width: 40px; font-weight: 700; color: #E5C158; text-align: left;}
-        .fin-name { float: left; font-size: 17px; font-weight: 700; letter-spacing: 2px; color: #FFF; margin-top: 5px; margin-left: 10px; }
-        
-        .fin-data { float: right; text-align: right; }
-        .fin-price { font-family: 'Teko', sans-serif; font-size: 42px; font-weight: 500; line-height: 1; }
-        .fin-tl { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 600; color: #bbb; margin-left: 5px; }
-        .fin-change { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; display: block; margin-top: 5px; }
-        .fin-change-up { color: #34C759; }
-        .fin-change-down { color: #FF3B30; }
+        .fin-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            border-radius: 14px 0 0 14px;
+        }
+        .fin-card.up::before { background: #4ADE80; box-shadow: 0 0 12px #4ADE80; }
+        .fin-card.down::before { background: #F87171; box-shadow: 0 0 12px #F87171; }
 
-        @keyframes pulse { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
-        @-webkit-keyframes pulse { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
+        .fin-left { display: flex; align-items: center; }
+        .fin-icon { font-size: 22px; font-weight: 900; color: #D4AF5A; width: 32px; text-align: center; font-family: 'Teko', sans-serif; margin-right: 12px; }
+        .fin-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #F0EDE8; }
+        .fin-subname { font-size: 10px; color: #8A8070; letter-spacing: 1px; margin-top: 2px; }
 
+        .fin-right { text-align: right; }
+        .fin-price { font-family: 'Teko', sans-serif; font-size: 34px; font-weight: 500; line-height: 1; color: #F0EDE8; }
+        .fin-tl { font-size: 13px; font-weight: 600; color: #8A8070; margin-left: 3px; }
+        .fin-change { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; margin-top: 4px; }
+        .fin-change.up { color: #4ADE80; }
+        .fin-change.down { color: #F87171; }
+        .fin-updated { font-size: 10px; color: #8A8070; letter-spacing: 2px; text-align: right; margin-top: 8px; }
+
+        @-webkit-keyframes blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+        @keyframes blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="bg-engine"></div>
-    <div class="bg-overlay"></div>
-    
-    <div id="fs-btn" onclick="AppOS.toggleFullScreen()" title="Tam Ekran Yap">⛶</div>
+<div id="bg-engine"></div>
+<div class="bg-overlay"></div>
 
-    <div class="header-brand">
-        <div class="brand-title">BÜROTARZ</div>
-        <div class="brand-sub">EXECUTIVE WALL OS</div>
-    </div>
+<div id="fs-btn" onclick="AppOS.toggleFullScreen()" title="Tam Ekran">⛶</div>
 
-    <div id="app-core">
-        
-        <!-- SOL PANEL -->
-        <div class="glass-panel panel-left">
-            <div class="module-header mh-news">
-                <div class="module-title"><div class="live-dot"></div> CANLI GÜNDEM & HABER</div>
-            </div>
-            <div class="news-wrapper">
-                <div class="news-track" id="news-track">
-                    <div class="news-card"><div class="news-headline" style="color:#aaa;">Veri ağına bağlanılıyor...</div></div>
-                </div>
-            </div>
+<div class="header-brand">
+    <img src="http://burotarz.com/BUROTARZ/assets/img/logo/logo.png" alt="Bürotarz" 
+         onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block'">
+    <div id="logo-fallback" style="display:none; font-family:'Cinzel',serif; font-size:34px; letter-spacing:18px; font-weight:900; color:#fff;">BÜROTARZ</div>
+    <div class="brand-sub">Executive Wall OS</div>
+</div>
 
-            <div class="module-header mh-calendar">
-                <div class="module-title" style="color:#E5C158;">AJANDA & TARİH</div>
-            </div>
-            <div class="calendar-board">
+<div id="app-core">
+
+    <!-- ──── SOL PANEL ──── -->
+    <div class="glass-panel panel-left">
+        <div class="module-header mh-cal">
+            <div class="module-title"><span class="accent">📅</span> AJANDA & TARİH</div>
+        </div>
+        <div class="calendar-board">
+            <div class="cal-left">
                 <div class="cal-day-num" id="cal-day-num">--</div>
-                <div class="cal-month-year" id="cal-month-year">YÜKLENİYOR</div>
-                <div class="cal-day-name" id="cal-day-name">--</div>
+                <div class="cal-day-name" id="cal-day-name">------</div>
+            </div>
+            <div class="cal-divider"></div>
+            <div class="cal-right">
+                <div class="cal-month" id="cal-month">-------</div>
+                <div class="cal-year" id="cal-year">----</div>
             </div>
         </div>
+        <div class="cal-week-row" id="cal-week-row"></div>
 
-        <!-- ORTA PANEL -->
-        <div class="panel-center">
-            <div class="real-wall-clock">
-                <div class="clock-face-inner">
+        <div class="module-header mh-news">
+            <div class="module-title"><div class="live-dot"></div> SON DAKİKA & CANLI GÜNDEM</div>
+        </div>
+        <div class="news-wrapper">
+            <div class="news-track" id="news-track">
+                <div class="news-card"><span class="news-headline" style="color:#555;">Haber akışı yükleniyor...</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ──── ORTA PANEL ──── -->
+    <div class="panel-center">
+        <div class="clock-outer-ring">
+            <div class="clock-middle-ring">
+                <div class="clock-face" id="clock-face">
                     <div class="clock-markers" id="c-markers"></div>
-                    <div class="clock-brand">
+                    <div class="clock-roman-nums" id="roman-nums"></div>
+                    <div class="clock-brand-center">
                         <div class="c-brand-name">BÜROTARZ</div>
                         <div class="c-brand-sub">PRECISION TIMEPIECE</div>
                     </div>
@@ -224,293 +463,468 @@
                     <div class="c-pin"></div>
                 </div>
             </div>
-
-            <div class="digital-clock-box">
-                <span id="digi-h">00</span><span class="digi-blink">:</span><span id="digi-m">00</span>
-                <span class="digi-sec" id="digi-s">00</span>
-            </div>
         </div>
 
-        <!-- SAĞ PANEL -->
-        <div class="glass-panel panel-right">
-            
-            <div class="module-header mh-news">
-                <div class="module-title">METEOROLOJİ BİLGİSİ</div>
-            </div>
-            <div class="weather-board">
-                <div class="w-loc">BEŞİRLİ / TRABZON</div>
-                <div class="w-main">
-                    <div class="w-main-left">
-                        <div class="w-temp"><span id="w-temp-val">--</span>°</div>
-                        <div class="w-desc" id="w-desc-val">Analiz Ediliyor...</div>
-                    </div>
-                    <div class="w-main-right" id="w-icon-val">⏳</div>
-                </div>
-                <div class="w-details">
-                    <div class="w-det-item">
-                        <div class="w-det-icon">🌡️</div>
-                        <div class="w-det-text"><div class="w-det-val" id="w-feel">--°</div><div class="w-det-lbl">Hissedilen</div></div>
-                    </div>
-                    <div class="w-det-item">
-                        <div class="w-det-icon">💧</div>
-                        <div class="w-det-text"><div class="w-det-val" id="w-hum">--%</div><div class="w-det-lbl">Nem Oranı</div></div>
-                    </div>
-                    <div class="w-det-item">
-                        <div class="w-det-icon">💨</div>
-                        <div class="w-det-text"><div class="w-det-val" id="w-wind">--</div><div class="w-det-lbl">Rüzgar (km)</div></div>
-                    </div>
-                    <div class="w-det-item">
-                        <div class="w-det-icon">⏱️</div>
-                        <div class="w-det-text"><div class="w-det-val" id="w-pres">--</div><div class="w-det-lbl">Basınç (hPa)</div></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="finance-title-container">
-                <div class="module-title"><div class="live-dot" style="background:#34C759; box-shadow:0 0 15px #34C759;"></div> CANLI PİYASA</div>
-            </div>
-            
-            <div class="finance-board" id="fin-board">
-                <div class="fin-card" id="fin-gold">
-                    <div class="fin-symbol"><div class="fin-icon">Au</div><div class="fin-name">GRAM ALTIN</div></div>
-                    <div class="fin-data">
-                        <div class="fin-price"><span id="val-gold">--</span><span class="fin-tl">TL</span></div>
-                        <div class="fin-change" id="chg-gold">--</div>
-                    </div>
-                </div>
-                <div class="fin-card" id="fin-usd">
-                    <div class="fin-symbol"><div class="fin-icon">$</div><div class="fin-name">DOLAR</div></div>
-                    <div class="fin-data">
-                        <div class="fin-price"><span id="val-usd">--</span><span class="fin-tl">TL</span></div>
-                        <div class="fin-change" id="chg-usd">--</div>
-                    </div>
-                </div>
-                <div class="fin-card" id="fin-eur">
-                    <div class="fin-symbol"><div class="fin-icon">€</div><div class="fin-name">EURO</div></div>
-                    <div class="fin-data">
-                        <div class="fin-price"><span id="val-eur">--</span><span class="fin-tl">TL</span></div>
-                        <div class="fin-change" id="chg-eur">--</div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="digital-clock-box">
+            <span id="digi-h">00</span><span class="digi-blink">:</span><span id="digi-m">00</span><span class="digi-sec" id="digi-s">00</span>
         </div>
     </div>
 
-<script>
-    function padZero(num) { return num < 10 ? '0' + num : num; }
+    <!-- ──── SAĞ PANEL ──── -->
+    <div class="glass-panel panel-right">
+        <div class="module-header mh-cal">
+            <div class="module-title"><span class="accent">🌤</span> METEOROLOJİ</div>
+        </div>
+        <div class="weather-board">
+            <div class="w-loc">📍 Beşirli / Trabzon</div>
+            <div class="w-main">
+                <div>
+                    <div class="w-temp"><span id="w-temp">--</span><sup>°C</sup></div>
+                    <div class="w-desc" id="w-desc">Analiz Ediliyor...</div>
+                </div>
+                <div class="w-icon" id="w-icon">⏳</div>
+            </div>
+            <div class="w-details">
+                <div class="w-det-item">
+                    <div class="w-det-icon">🌡️</div>
+                    <div class="w-det-text">
+                        <div class="w-det-val" id="w-feel">--°</div>
+                        <div class="w-det-lbl">Hissedilen</div>
+                    </div>
+                </div>
+                <div class="w-det-item">
+                    <div class="w-det-icon">💧</div>
+                    <div class="w-det-text">
+                        <div class="w-det-val" id="w-hum">--%</div>
+                        <div class="w-det-lbl">Nem</div>
+                    </div>
+                </div>
+                <div class="w-det-item">
+                    <div class="w-det-icon">💨</div>
+                    <div class="w-det-text">
+                        <div class="w-det-val" id="w-wind">--</div>
+                        <div class="w-det-lbl">Rüzgar km/h</div>
+                    </div>
+                </div>
+                <div class="w-det-item">
+                    <div class="w-det-icon">⏱️</div>
+                    <div class="w-det-text">
+                        <div class="w-det-val" id="w-pres">--</div>
+                        <div class="w-det-lbl">Basınç hPa</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    function ajaxGet(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    try { var data = JSON.parse(xhr.responseText); callback(null, data); } 
-                    catch (e) { callback(e, null); }
-                } else { callback("Hata", null); }
+        <!-- Finans -->
+        <div class="finance-section">
+            <div class="fin-header">
+                <div class="module-title"><div class="live-dot green"></div> CANLI PİYASA</div>
+            </div>
+
+            <div class="fin-card" id="fin-usd">
+                <div class="fin-left">
+                    <div class="fin-icon">$</div>
+                    <div><div class="fin-name">DOLAR</div><div class="fin-subname">USD / TRY</div></div>
+                </div>
+                <div class="fin-right">
+                    <div class="fin-price"><span id="val-usd">--</span><span class="fin-tl">₺</span></div>
+                    <div class="fin-change" id="chg-usd">--</div>
+                </div>
+            </div>
+
+            <div class="fin-card" id="fin-eur">
+                <div class="fin-left">
+                    <div class="fin-icon">€</div>
+                    <div><div class="fin-name">EURO</div><div class="fin-subname">EUR / TRY</div></div>
+                </div>
+                <div class="fin-right">
+                    <div class="fin-price"><span id="val-eur">--</span><span class="fin-tl">₺</span></div>
+                    <div class="fin-change" id="chg-eur">--</div>
+                </div>
+            </div>
+
+            <div class="fin-card" id="fin-gold">
+                <div class="fin-left">
+                    <div class="fin-icon">Au</div>
+                    <div><div class="fin-name">GRAM ALTIN</div><div class="fin-subname">XAU TRY</div></div>
+                </div>
+                <div class="fin-right">
+                    <div class="fin-price"><span id="val-gold">--</span><span class="fin-tl">₺</span></div>
+                    <div class="fin-change" id="chg-gold">--</div>
+                </div>
+            </div>
+
+            <div class="fin-updated" id="fin-updated"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+'use strict';
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+function ajax(url, cb) {
+    var x = new XMLHttpRequest();
+    x.open('GET', url, true);
+    x.timeout = 10000;
+    x.onreadystatechange = function() {
+        if (x.readyState !== 4) return;
+        if (x.status === 200) {
+            try { cb(null, JSON.parse(x.responseText)); }
+            catch(e) { cb(e, null); }
+        } else { cb('HTTP ' + x.status, null); }
+    };
+    x.ontimeout = function() { cb('timeout', null); };
+    x.send();
+}
+
+var AppOS = {
+    init: function() {
+        this.handleScaling();
+        this.initBackgrounds();
+        this.buildClockFace();
+        this.runClock();
+        this.updateCalendar();
+        this.initWeather();
+        this.initFinance();
+        this.initNews();
+        var self = this;
+        setInterval(function() { self.updateCalendar(); }, 60000);
+        window.addEventListener('resize', function() { self.handleScaling(); });
+    },
+
+    toggleFullScreen: function() {
+        var d = document, el = d.documentElement;
+        var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        var ex  = d.exitFullscreen   || d.webkitExitFullscreen   || d.mozCancelFullScreen  || d.msExitFullscreen;
+        var full = d.fullscreenElement || d.webkitFullscreenElement || d.mozFullScreenElement || d.msFullscreenElement;
+        if (!full) { if (req) req.call(el); } else { if (ex) ex.call(d); }
+    },
+
+    handleScaling: function() {
+        var el = document.getElementById('app-core');
+        var s  = Math.min(window.innerWidth / 1920, window.innerHeight / 1080) * 0.97;
+        el.style.webkitTransform = 'scale(' + s + ')';
+        el.style.transform = 'scale(' + s + ')';
+    },
+
+    initBackgrounds: function() {
+        var trabzonUrls = [
+            'https://images.unsplash.com/photo-1627989580309-1fd52bc4b051?q=85&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1533130061792-64b345e4a6ad?q=85&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1623972949100-dc2a0a64ba47?q=85&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=85&w=1920&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=85&w=1920&auto=format&fit=crop'
+        ];
+
+        var engine = document.getElementById('bg-engine');
+        var layers = [document.createElement('div'), document.createElement('div')];
+        layers[0].className = 'bg-layer';
+        layers[1].className = 'bg-layer';
+        engine.appendChild(layers[0]);
+        engine.appendChild(layers[1]);
+
+        var idx = 0, active = 0;
+
+        var change = function() {
+            var next = (active + 1) % 2;
+            var url  = trabzonUrls[idx % trabzonUrls.length];
+            idx++;
+            var img = new Image();
+            img.onload = function() {
+                layers[next].style.backgroundImage = "url('" + url + "')";
+                setTimeout(function() {
+                    layers[next].className = 'bg-layer bg-layer-active';
+                    layers[active].className = 'bg-layer';
+                    active = next;
+                }, 100);
+            };
+            img.onerror = function() {
+                layers[next].style.backgroundImage = "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1920')";
+                layers[next].className = 'bg-layer bg-layer-active';
+                layers[active].className = 'bg-layer';
+                active = next;
+            };
+            img.src = url;
+        };
+
+        change();
+        setInterval(change, 32000);
+    },
+
+    buildClockFace: function() {
+        var container = document.getElementById('c-markers');
+        for (var i = 0; i < 60; i++) {
+            var isHour = (i % 5 === 0);
+            var el = document.createElement('div');
+            el.className = 'c-marker';
+            var w = isHour ? 5 : 1.5;
+            var h = isHour ? 28 : 10;
+            var r = 212;
+            var angle = (i * 6 - 90) * (Math.PI / 180);
+            var x = r * Math.cos(angle) - w / 2;
+            var y = r * Math.sin(angle) - h / 2;
+            el.style.width = w + 'px';
+            el.style.height = h + 'px';
+            el.style.background = isHour ? '#1a1208' : '#6a5a40';
+            el.style.webkitTransform = 'translate(' + x + 'px,' + y + 'px) rotate(' + (i * 6) + 'deg)';
+            el.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + (i * 6) + 'deg)';
+            el.style.borderRadius = '2px';
+            container.appendChild(el);
+        }
+
+        var romCont = document.getElementById('roman-nums');
+        var romans = ['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
+        for (var j = 0; j < 12; j++) {
+            var rEl = document.createElement('div');
+            rEl.className = 'rom-num';
+            var a = (j * 30 - 90) * (Math.PI / 180);
+            var radius = 185;
+            var rx = 227 + radius * Math.cos(a);
+            var ry = 227 + radius * Math.sin(a);
+            rEl.style.left = rx + 'px';
+            rEl.style.top = ry + 'px';
+            rEl.style.webkitTransform = 'translate(-50%,-50%)';
+            rEl.style.transform = 'translate(-50%,-50%)';
+            rEl.innerText = romans[j];
+            romCont.appendChild(rEl);
+        }
+    },
+
+    runClock: function() {
+        var hh = document.getElementById('hh');
+        var mh = document.getElementById('mh');
+        var sh = document.getElementById('sh');
+        var dH = document.getElementById('digi-h');
+        var dM = document.getElementById('digi-m');
+        var dS = document.getElementById('digi-s');
+        var lastS = -1;
+
+        var tick = function() {
+            var d  = new Date();
+            var ms = d.getMilliseconds();
+            var s  = d.getSeconds();
+            var m  = d.getMinutes();
+            var h  = d.getHours();
+
+            var sDeg = (s + ms / 1000) * 6;
+            var mDeg = (m + s / 60) * 6;
+            var hDeg = ((h % 12) + m / 60) * 30;
+
+            sh.style.webkitTransform = 'rotateZ(' + sDeg + 'deg)';
+            mh.style.webkitTransform = 'rotateZ(' + mDeg + 'deg)';
+            hh.style.webkitTransform = 'rotateZ(' + hDeg + 'deg)';
+            
+            sh.style.transform = 'rotateZ(' + sDeg + 'deg)';
+            mh.style.transform = 'rotateZ(' + mDeg + 'deg)';
+            hh.style.transform = 'rotateZ(' + hDeg + 'deg)';
+
+            if (s !== lastS) {
+                lastS = s;
+                dH.innerText = pad(h);
+                dM.innerText = pad(m);
+                dS.innerText = pad(s);
+            }
+            // Eski TV'ler için güvenli döngü
+            setTimeout(tick, 50);
+        };
+        tick();
+    },
+
+    updateCalendar: function() {
+        var MONTHS  = ['OCAK','ŞUBAT','MART','NİSAN','MAYIS','HAZİRAN','TEMMUZ','AĞUSTOS','EYLÜL','EKİM','KASIM','ARALIK'];
+        var DAYS    = ['PAZARTESİ','SALI','ÇARŞAMBA','PERŞEMBE','CUMA','CUMARTESİ','PAZAR'];
+        var DAYSSHORT = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+        var d = new Date();
+        var dow = d.getDay();
+        var trDay = (dow + 6) % 7;
+
+        document.getElementById('cal-day-num').innerText  = d.getDate();
+        document.getElementById('cal-month').innerText    = MONTHS[d.getMonth()];
+        document.getElementById('cal-year').innerText     = d.getFullYear();
+        document.getElementById('cal-day-name').innerText = DAYS[trDay];
+
+        var row = document.getElementById('cal-week-row');
+        row.innerHTML = '';
+        for (var i = 0; i < 7; i++) {
+            var btn = document.createElement('div');
+            btn.className = 'cal-wday' + (i === trDay ? ' today' : '');
+            btn.innerText = DAYSSHORT[i];
+            row.appendChild(btn);
+        }
+    },
+
+    initWeather: function() {
+        var url = 'https://api.open-meteo.com/v1/forecast?latitude=41.002&longitude=39.689&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m&timezone=Europe/Istanbul';
+        var fetch = function() {
+            ajax(url, function(err, data) {
+                if (err || !data || !data.current) return;
+                var c = data.current;
+                document.getElementById('w-temp').innerText = Math.round(c.temperature_2m);
+                document.getElementById('w-feel').innerText = Math.round(c.apparent_temperature) + '°';
+                document.getElementById('w-hum').innerText  = c.relative_humidity_2m + '%';
+                document.getElementById('w-wind').innerText = Math.round(c.wind_speed_10m);
+                document.getElementById('w-pres').innerText = Math.round(c.surface_pressure);
+
+                var code = c.weather_code;
+                var icon = '☀️', desc = 'AÇIK VE GÜNEŞLİ';
+                if (code >= 1  && code <= 3)  { icon = '⛅'; desc = 'PARÇALI BULUTLU'; }
+                if (code >= 45 && code <= 48) { icon = '🌫️'; desc = 'SİSLİ'; }
+                if (code >= 51 && code <= 67) { icon = '🌧️'; desc = 'YAĞMURLU'; }
+                if (code >= 71 && code <= 77) { icon = '❄️'; desc = 'KAR YAĞIŞLI'; }
+                if (code >= 80 && code <= 82) { icon = '🌦️'; desc = 'SAĞANAK Y.'; }
+                if (code >= 95)               { icon = '⛈️'; desc = 'FIRTINALI'; }
+
+                document.getElementById('w-icon').innerText = icon;
+                document.getElementById('w-desc').innerText = desc;
+            });
+        };
+        fetch();
+        setInterval(fetch, 300000);
+    },
+
+    initFinance: function() {
+        var primaryUrl  = 'https://finans.truncgil.com/v3/today.json';
+        
+        var applyCard = function(id, priceStr, chgStr, dec) {
+            var card  = document.getElementById('fin-' + id);
+            var valEl = document.getElementById('val-' + id);
+            var chgEl = document.getElementById('chg-' + id);
+
+            if (!priceStr) return;
+            var price = parseFloat(priceStr.replace(/\./g,'').replace(',','.'));
+            var chg   = parseFloat((chgStr || '0').replace('%','').replace(',','.'));
+            if (isNaN(price)) return;
+
+            var isUp = chg >= 0;
+            var fmt  = price.toFixed(dec).replace('.', ',');
+            valEl.innerText = fmt;
+            chgEl.innerHTML = (isUp ? '▲' : '▼') + ' ' + Math.abs(chg).toFixed(2) + '%';
+            chgEl.className = 'fin-change ' + (isUp ? 'up' : 'down');
+            card.className  = 'fin-card ' + (isUp ? 'up' : 'down');
+        };
+
+        var fetchPrimary = function() {
+            ajax(primaryUrl + '?t=' + new Date().getTime(), function(err, data) {
+                if (!err && data) {
+                    if (data['gram-altin']) applyCard('gold', data['gram-altin'].Selling, data['gram-altin'].Change, 2);
+                    if (data['USD'])        applyCard('usd',  data['USD'].Selling,        data['USD'].Change,        4);
+                    if (data['EUR'])        applyCard('eur',  data['EUR'].Selling,        data['EUR'].Change,        4);
+
+                    var now = new Date();
+                    document.getElementById('fin-updated').innerText =
+                        'Güncellendi: ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+                } else {
+                    ajax('https://open.er-api.com/v6/latest/USD', function(err2, data2) {
+                        if (!err2 && data2 && data2.rates) {
+                            var tryRate = data2.rates['TRY'] || 0;
+                            var eurRate = data2.rates['EUR'] || 0;
+                            if (tryRate > 0) {
+                                document.getElementById('val-usd').innerText = tryRate.toFixed(4).replace('.', ',');
+                                document.getElementById('val-eur').innerText = (tryRate / eurRate).toFixed(4).replace('.', ',');
+                                document.getElementById('chg-usd').innerText = 'Yedek kaynak';
+                                document.getElementById('chg-eur').innerText = 'Yedek kaynak';
+                            }
+                        }
+                    });
+                }
+            });
+        };
+
+        fetchPrimary();
+        setInterval(fetchPrimary, 15000);
+    },
+
+    initNews: function() {
+        var track  = document.getElementById('news-track');
+        var items  = [];
+        var cIdx   = 0;
+
+        var sources = [
+            { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fmanset_articles.rss',      label: 'TRT HABER' },
+            { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.ntv.com.tr%2Frss%2Fgundem',              label: 'NTV GÜNDEM' },
+            { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Frss.hurriyet.com.tr%2Frss%2Fgundem',         label: 'HÜRRİYET' },
+            { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sabah.com.tr%2Frss%2Fgundem.xml',        label: 'SABAH' },
+            { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cnnturk.com%2Fapi%2Frss%2Fcnnturk%2Fturk-haber-rss', label: 'CNN TÜRK' }
+        ];
+
+        var loadedCount = 0;
+        var allItems    = [];
+
+        var render = function() {
+            if (allItems.length === 0) return;
+            track.style.opacity = '0';
+            setTimeout(function() {
+                track.innerHTML = '';
+                for (var i = 0; i < 3; i++) {
+                    var n   = allItems[(cIdx + i) % allItems.length];
+                    var t   = '';
+                    if (n.pubDate) {
+                        var d = new Date(n.pubDate.replace(/-/g,'/'));
+                        if (!isNaN(d.getTime())) t = pad(d.getHours()) + ':' + pad(d.getMinutes());
+                    }
+                    var card = document.createElement('div');
+                    card.className = 'news-card';
+                    card.innerHTML =
+                        '<span class="news-source">' + (n._source || 'AJANS') + '</span>' +
+                        '<span class="news-headline">' + (n.title || '') + '</span>' +
+                        (t ? '<div class="news-time">' + t + '</div>' : '');
+                    track.appendChild(card);
+                }
+                cIdx = (cIdx + 3) % allItems.length;
+                track.style.opacity = '1';
+            }, 600);
+        };
+
+        var fetchSource = function(src) {
+            ajax(src.url + '&t=' + new Date().getTime(), function(err, data) {
+                loadedCount++;
+                if (!err && data && data.status === 'ok' && data.items) {
+                    var fresh = data.items.slice(0, 8);
+                    for (var i = 0; i < fresh.length; i++) {
+                        fresh[i]._source = src.label;
+                        allItems.push(fresh[i]);
+                    }
+                    allItems.sort(function(a, b) {
+                        return new Date(b.pubDate || 0) - new Date(a.pubDate || 0);
+                    });
+                    var seen = {};
+                    var filtered = [];
+                    for(var k=0; k<allItems.length; k++) {
+                        var x = allItems[k];
+                        if (x.title) {
+                            var key = x.title.substring(0, 40);
+                            if (!seen[key]) {
+                                seen[key] = true;
+                                filtered.push(x);
+                            }
+                        }
+                    }
+                    allItems = filtered.slice(0, 30);
+                }
+                if (loadedCount === sources.length && allItems.length > 0) {
+                    render();
+                }
+            });
+        };
+
+        var fetchAll = function() {
+            loadedCount = 0;
+            allItems    = [];
+            for (var i = 0; i < sources.length; i++) {
+                fetchSource(sources[i]);
             }
         };
-        xhr.send();
+
+        fetchAll();
+        setInterval(render,   20000); 
+        setInterval(fetchAll, 300000); 
     }
+};
 
-    var AppOS = {
-        init: function() {
-            var self = this;
-            this.handleScaling();
-            this.initNatureBackgrounds();
-            this.drawClockMarkers();
-            this.runClocks();
-            this.initLiveFinance();
-            this.initAdvancedWeather();
-            this.initNewsFeed();
-            this.updateCalendar();
-            
-            setInterval(function(){ self.updateCalendar(); }, 3600000); 
-            window.addEventListener('resize', function() { self.handleScaling(); });
-        },
-
-        toggleFullScreen: function() {
-            var doc = window.document;
-            var docEl = doc.documentElement;
-            var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-            var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
-            if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-                if(requestFullScreen) { requestFullScreen.call(docEl); }
-            } else {
-                if(cancelFullScreen) { cancelFullScreen.call(doc); }
-            }
-        },
-
-        updateCalendar: function() {
-            var months = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
-            var days = ["PAZAR", "PAZARTESİ", "SALI", "ÇARŞAMBA", "PERŞEMBE", "CUMA", "CUMARTESİ"];
-            var d = new Date();
-            document.getElementById('cal-day-num').innerText = d.getDate();
-            document.getElementById('cal-month-year').innerText = months[d.getMonth()] + " " + d.getFullYear();
-            document.getElementById('cal-day-name').innerText = days[d.getDay()];
-        },
-
-        handleScaling: function() {
-            var core = document.getElementById('app-core');
-            var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080) * 0.95;
-            core.style.transform = "scale(" + scale + ")";
-            core.style.webkitTransform = "scale(" + scale + ")";
-        },
-
-        initNatureBackgrounds: function() {
-            var ids = ['1441974231531-c6227db76b6e', '1472214103451-9374bd1c798e', '1464822759023-fed622ff2c3b', '1426604908110-3973cb410943'];
-            var engine = document.getElementById('bg-engine');
-            var layers = [document.createElement('div'), document.createElement('div')];
-            for (var i = 0; i < 2; i++) { layers[i].className = 'bg-layer'; engine.appendChild(layers[i]); }
-            
-            var idx = 0, active = 0;
-            
-            var changeBg = function() {
-                var next = (active + 1) % 2;
-                // Çözünürlük 3840'tan 1920'ye düşürüldü. (TV'ler için ideal boyut, takılmayı önler)
-                var imgUrl = 'https://images.unsplash.com/photo-' + ids[idx] + '?q=80&w=1920&auto=format&fit=crop';
-                
-                // Preloader Motoru: Resim arkaplanda tam yüklenmeden DOM'a müdahale edilmez.
-                var preloader = new Image();
-                preloader.onload = function() {
-                    layers[next].style.backgroundImage = "url('" + imgUrl + "')";
-                    
-                    setTimeout(function() {
-                        layers[next].className = 'bg-layer bg-layer-active';
-                        layers[active].className = 'bg-layer';
-                        active = next;
-                    }, 50);
-                };
-                preloader.src = imgUrl; // İndirmeyi başlat
-                
-                idx = (idx + 1) % ids.length;
-            };
-            
-            changeBg(); 
-            setInterval(changeBg, 30000); 
-        },
-
-        drawClockMarkers: function() {
-            var container = document.getElementById('c-markers');
-            for(var i=0; i<60; i++) {
-                var isHour = (i % 5 === 0);
-                var marker = document.createElement('div');
-                marker.className = 'c-marker';
-                var w = isHour ? 6 : 2; var h = isHour ? 25 : 10; var radius = 215;
-                var angle = (i * 6 - 90) * (Math.PI / 180);
-                var x = radius * Math.cos(angle) - w/2; var y = radius * Math.sin(angle) - h/2;
-                marker.style.width = w + 'px'; marker.style.height = h + 'px';
-                var t = "translate(" + x + "px, " + y + "px) rotate(" + (i*6) + "deg)";
-                marker.style.transform = t; marker.style.webkitTransform = t;
-                container.appendChild(marker);
-            }
-        },
-
-        runClocks: function() {
-            var hh = document.getElementById('hh'), mh = document.getElementById('mh'), sh = document.getElementById('sh');
-            var dh = document.getElementById('digi-h'), dm = document.getElementById('digi-m'), ds = document.getElementById('digi-s');
-            var lastSec = -1;
-            var tick = function() {
-                var d = new Date();
-                var ms = d.getMilliseconds(), s = d.getSeconds(), m = d.getMinutes(), h = d.getHours();
-                var sDeg = (s + ms/1000) * 6; var mDeg = (m + s/60) * 6; var hDeg = ((h % 12) + m/60) * 30;
-                sh.style.transform = "rotateZ(" + sDeg + "deg)"; sh.style.webkitTransform = "rotateZ(" + sDeg + "deg)";
-                mh.style.transform = "rotateZ(" + mDeg + "deg)"; mh.style.webkitTransform = "rotateZ(" + mDeg + "deg)";
-                hh.style.transform = "rotateZ(" + hDeg + "deg)"; hh.style.webkitTransform = "rotateZ(" + hDeg + "deg)";
-                if(s !== lastSec) {
-                    lastSec = s; dh.innerText = padZero(h); dm.innerText = padZero(m); ds.innerText = padZero(s);
-                }
-                if (window.requestAnimationFrame) { requestAnimationFrame(tick); } else { setTimeout(tick, 16); }
-            };
-            tick();
-        },
-
-        initLiveFinance: function() {
-            var url = 'https://finans.truncgil.com/v3/today.json';
-            var board = document.getElementById('fin-board');
-            
-            var update = function(id, data, dec) {
-                if(!data) return;
-                var card = document.getElementById("fin-" + id), valEl = document.getElementById("val-" + id), chgEl = document.getElementById("chg-" + id);
-                var price = parseFloat(data.Selling.replace(/\./g, '').replace(',', '.'));
-                var chg = parseFloat((data.Change || "0").replace('%', '').replace(',', '.'));
-                var isUp = chg >= 0;
-                var fmt = price.toFixed(dec).replace('.', ',');
-                if (valEl.innerText !== fmt) {
-                    valEl.innerText = fmt;
-                    chgEl.innerHTML = (isUp ? '▲' : '▼') + ' ' + Math.abs(chg).toFixed(2) + '%';
-                    chgEl.className = "fin-change fin-change-" + (isUp ? 'up' : 'down');
-                    card.className = "fin-card fin-card-" + (isUp ? 'up' : 'down');
-                }
-            };
-
-            var fetchM = function() {
-                var cacheBuster = "?t=" + new Date().getTime();
-                board.style.opacity = '0.5';
-                ajaxGet(url + cacheBuster, function(err, data) {
-                    setTimeout(function() { board.style.opacity = '1'; }, 300);
-                    if(!err && data) { 
-                        update('gold', data['gram-altin'], 2); 
-                        update('usd', data['USD'], 4); 
-                        update('eur', data['EUR'], 4); 
-                    }
-                });
-            };
-            fetchM(); setInterval(fetchM, 10000); 
-        },
-
-        initAdvancedWeather: function() {
-            var url = 'https://api.open-meteo.com/v1/forecast?latitude=41.002&longitude=39.689&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m&timezone=auto';
-            var fetchW = function() {
-                var cacheBuster = "&t=" + new Date().getTime(); 
-                ajaxGet(url + cacheBuster, function(err, data) {
-                    if(!err && data && data.current) {
-                        var cur = data.current;
-                        document.getElementById('w-temp-val').innerText = Math.round(cur.temperature_2m);
-                        document.getElementById('w-feel').innerText = Math.round(cur.apparent_temperature) + '°';
-                        document.getElementById('w-hum').innerText = cur.relative_humidity_2m + '%';
-                        document.getElementById('w-wind').innerText = Math.round(cur.wind_speed_10m);
-                        document.getElementById('w-pres').innerText = Math.round(cur.surface_pressure);
-                        var code = cur.weather_code, icon="☀️", desc="AÇIK VE BERRAK";
-                        if(code>=1 && code<=3){icon="🌤️";desc="PARÇALI BULUTLU";} else if(code>=45 && code<=48){icon="🌫️";desc="SİSLİ BİR GÜN";}
-                        else if(code>=51 && code<=67){icon="🌧️";desc="YAĞMUR GEÇİŞLERİ";} else if(code>=71 && code<=77){icon="❄️";desc="KAR YAĞIŞLI";}
-                        else if(code>=95){icon="⛈️";desc="FIRTINALI";}
-                        document.getElementById('w-icon-val').innerText = icon; document.getElementById('w-desc-val').innerText = desc;
-                    }
-                });
-            };
-            fetchW(); setInterval(fetchW, 300000); 
-        },
-
-        initNewsFeed: function() {
-            var track = document.getElementById('news-track'), items = [], cIdx = 0;
-            var render = function() {
-                if(items.length === 0) return;
-                track.style.opacity = '0';
-                setTimeout(function() {
-                    track.innerHTML = '';
-                    for(var i=0; i<3; i++) { 
-                        var news = items[(cIdx + i) % items.length];
-                        var dStr = (news.pubDate || "").replace(/-/g, '/');
-                        var d = new Date(dStr);
-                        var t = padZero(d.getHours()) + ":" + padZero(d.getMinutes());
-                        track.innerHTML += '<div class="news-card"><span class="news-source">AJANS BÜLTENİ</span><div class="news-headline">' + news.title + '</div><div class="news-time">' + t + '</div></div>';
-                    }
-                    cIdx += 3; track.style.opacity = '1';
-                }, 600);
-            };
-            var fetchN = function() {
-                var cacheBuster = "&t=" + new Date().getTime(); 
-                ajaxGet('https://api.rss2json.com/v1/api.json?rss_url=https://www.trthaber.com/manset_articles.rss' + cacheBuster, function(err, data) {
-                    if(!err && data && data.status === 'ok') { items = data.items.slice(0, 15); if (cIdx === 0) render(); }
-                });
-            };
-            fetchN(); setInterval(render, 15000); setInterval(fetchN, 300000); 
-        }
-    };
-
-    document.addEventListener('DOMContentLoaded', function() { AppOS.init(); });
+document.addEventListener('DOMContentLoaded', function() { AppOS.init(); });
 </script>
 </body>
 </html>
