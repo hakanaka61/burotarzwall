@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bürotarz - Masterpiece Wall OS (Live Cache-Bust Edition)</title>
+    <title>Bürotarz - Masterpiece Wall OS (Ultimate TV Edition)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +21,8 @@
             width: 100vw;
         }
 
-        /* --- GPU HIZLANDIRMALI ARKA PLAN MOTORU --- */
-        #bg-engine { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -5; background: #000; }
+        /* --- GPU HIZLANDIRMALI ARKA PLAN MOTORU (Z-Index Hatası Düzeltildi) --- */
+        #bg-engine { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; background: #000; }
         .bg-layer {
             position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center;
             opacity: 0; 
@@ -34,7 +34,7 @@
             filter: brightness(0.7) contrast(1.1);
         }
         .bg-layer-active { opacity: 1; -webkit-transform: scale3d(1.08, 1.08, 1); transform: scale3d(1.08, 1.08, 1); }
-        .bg-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -4; background: rgba(0,0,0,0.6); }
+        .bg-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; background: rgba(0,0,0,0.6); }
 
         /* --- TAM EKRAN BUTONU --- */
         #fs-btn {
@@ -51,6 +51,7 @@
             position: absolute; width: 1880px; height: 960px; left: 50%; top: 50%;
             margin-left: -940px; margin-top: -480px;
             transform-origin: center center; -webkit-transform-origin: center center;
+            z-index: 10; /* Arka planın üstünde kalması için eklendi */
         }
 
         /* --- GLASS PANELS (Ortak Özellikler) --- */
@@ -62,7 +63,7 @@
         }
 
         /* --- BAŞLIK --- */
-        .header-brand { position: absolute; top: 30px; left: 50%; margin-left: -300px; width: 600px; text-align: center; z-index: 100; }
+        .header-brand { position: absolute; top: 30px; left: 50%; margin-left: -300px; width: 600px; text-align: center; z-index: 10; }
         .brand-title { font-family: 'Cinzel', serif; font-size: 38px; letter-spacing: 22px; color: #FFF; text-shadow: 0 10px 20px rgba(0,0,0,0.9); font-weight: 900; }
         .brand-sub { font-family: 'Rajdhani', sans-serif; font-size: 15px; letter-spacing: 12px; color: #E5C158; margin-top: 5px; text-transform: uppercase; }
 
@@ -142,7 +143,6 @@
         .w-det-val { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #FFF; line-height: 20px;}
         .w-det-lbl { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;}
 
-        /* PİYASA BÖLÜMÜ GÜNCELLEME EFEKTİ İÇİN TRANSITION EKLENDİ */
         .finance-title-container { position: absolute; bottom: 350px; left: 35px; width: 410px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         .finance-board { 
             position: absolute; bottom: 35px; left: 35px; width: 410px;
@@ -270,7 +270,6 @@
                 <div class="module-title"><div class="live-dot" style="background:#34C759; box-shadow:0 0 15px #34C759;"></div> CANLI PİYASA</div>
             </div>
             
-            <!-- Piyasa Kartları (ID Eklendi: fin-board) -->
             <div class="finance-board" id="fin-board">
                 <div class="fin-card" id="fin-gold">
                     <div class="fin-symbol"><div class="fin-icon">Au</div><div class="fin-name">GRAM ALTIN</div></div>
@@ -364,18 +363,32 @@
             var engine = document.getElementById('bg-engine');
             var layers = [document.createElement('div'), document.createElement('div')];
             for (var i = 0; i < 2; i++) { layers[i].className = 'bg-layer'; engine.appendChild(layers[i]); }
+            
             var idx = 0, active = 0;
+            
             var changeBg = function() {
                 var next = (active + 1) % 2;
-                layers[next].style.backgroundImage = "url('https://images.unsplash.com/photo-" + ids[idx] + "?q=80&w=3840&auto=format&fit=crop')";
-                setTimeout(function() {
-                    layers[next].className = 'bg-layer bg-layer-active';
-                    layers[active].className = 'bg-layer';
-                    active = next;
-                }, 50);
+                // Çözünürlük 3840'tan 1920'ye düşürüldü. (TV'ler için ideal boyut, takılmayı önler)
+                var imgUrl = 'https://images.unsplash.com/photo-' + ids[idx] + '?q=80&w=1920&auto=format&fit=crop';
+                
+                // Preloader Motoru: Resim arkaplanda tam yüklenmeden DOM'a müdahale edilmez.
+                var preloader = new Image();
+                preloader.onload = function() {
+                    layers[next].style.backgroundImage = "url('" + imgUrl + "')";
+                    
+                    setTimeout(function() {
+                        layers[next].className = 'bg-layer bg-layer-active';
+                        layers[active].className = 'bg-layer';
+                        active = next;
+                    }, 50);
+                };
+                preloader.src = imgUrl; // İndirmeyi başlat
+                
                 idx = (idx + 1) % ids.length;
             };
-            changeBg(); setInterval(changeBg, 30000); 
+            
+            changeBg(); 
+            setInterval(changeBg, 30000); 
         },
 
         drawClockMarkers: function() {
@@ -433,16 +446,10 @@
             };
 
             var fetchM = function() {
-                // TV önbelleğini kırmak için saniyelik zaman damgası ekliyoruz (CACHE BUSTER)
                 var cacheBuster = "?t=" + new Date().getTime();
-                
-                // Güncelleme efekti: Panel hafif kararır
                 board.style.opacity = '0.5';
-
                 ajaxGet(url + cacheBuster, function(err, data) {
-                    // Veri gelince panel tekrar aydınlanır
                     setTimeout(function() { board.style.opacity = '1'; }, 300);
-                    
                     if(!err && data) { 
                         update('gold', data['gram-altin'], 2); 
                         update('usd', data['USD'], 4); 
@@ -450,16 +457,13 @@
                     }
                 });
             };
-            
-            fetchM(); 
-            // 15 saniyeden 10 saniyeye düşürüldü. Asla önbelleğe takılmayacak.
-            setInterval(fetchM, 10000); 
+            fetchM(); setInterval(fetchM, 10000); 
         },
 
         initAdvancedWeather: function() {
             var url = 'https://api.open-meteo.com/v1/forecast?latitude=41.002&longitude=39.689&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,surface_pressure,wind_speed_10m&timezone=auto';
             var fetchW = function() {
-                var cacheBuster = "&t=" + new Date().getTime(); // Hava durumu önbelleğini de kıralım
+                var cacheBuster = "&t=" + new Date().getTime(); 
                 ajaxGet(url + cacheBuster, function(err, data) {
                     if(!err && data && data.current) {
                         var cur = data.current;
@@ -497,7 +501,7 @@
                 }, 600);
             };
             var fetchN = function() {
-                var cacheBuster = "&t=" + new Date().getTime(); // Haber önbellek kırıcı
+                var cacheBuster = "&t=" + new Date().getTime(); 
                 ajaxGet('https://api.rss2json.com/v1/api.json?rss_url=https://www.trthaber.com/manset_articles.rss' + cacheBuster, function(err, data) {
                     if(!err && data && data.status === 'ok') { items = data.items.slice(0, 15); if (cIdx === 0) render(); }
                 });
