@@ -538,17 +538,17 @@
         </div>
 
         <div class="media-dock">
-            <!-- RADYO 1: RADYO 7 -->
+            <!-- RADYO 1: SÜPER FM -->
             <div class="media-dock-item" id="radyo-item-1">
-                <div class="media-icon">📻</div>
+                <div class="media-icon">🎧</div>
                 <div class="media-info">
-                    <div class="media-title">RADYO 7</div>
+                    <div class="media-title">SÜPER FM</div>
                     <div class="media-sub">
                         <div class="live-dot green" id="live-dot-1" style="display:none; width:6px; height:6px; margin-right:6px;"></div>
                         Yayın
                     </div>
                 </div>
-                <div class="media-controls" onclick="AppOS.playRadio(1, 'https://canliyayin.radyotvonline.com/radyo7/icecast.audio')">
+                <div class="media-controls" onclick="AppOS.playRadio(1, 'https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM_SC')">
                     <span id="play-btn-1">▶</span>
                 </div>
             </div>
@@ -715,6 +715,19 @@ var AppOS = {
         var vid = document.getElementById('bg-video');
         if (vid) {
             vid.playbackRate = 0.6; 
+            vid.muted = true; 
+            
+            // TV tarayıcıları radyo açıldığında arka plan videosunu siyah ekrana düşürmemek için saniyede bir oynatma kontrolü
+            setInterval(function() {
+                if (vid.paused) {
+                    vid.play().catch(function(e){});
+                }
+            }, 1000);
+
+            vid.addEventListener('ended', function() {
+                vid.currentTime = 0;
+                vid.play().catch(function(e){});
+            }, false);
         }
     },
 
@@ -727,22 +740,19 @@ var AppOS = {
     },
 
     playRadio: function(id, streamUrl) {
-        // 1. Tüm butonları ve aktif durumları sıfırla
         for(var i=1; i<=3; i++) {
             document.getElementById('play-btn-' + i).innerText = '▶';
             document.getElementById('live-dot-' + i).style.display = 'none';
             document.getElementById('radyo-item-' + i).classList.remove('active');
         }
 
-        // 2. Tıklanan radyo zaten çalıyorsa durdur ve çık
         if (this.currentRadioId === id && this.audioObj && !this.audioObj.paused) {
             this.audioObj.pause();
-            this.audioObj.src = ""; // TV önbelleğini temizlemek için kaynağı boşalt
+            this.audioObj.src = "";
             this.currentRadioId = null;
             return;
         }
 
-        // 3. Farklı bir radyo çalıyorsa önceki bağlantıyı tamamen kopar
         if (this.audioObj) {
             this.audioObj.pause();
             this.audioObj.src = "";
@@ -752,7 +762,6 @@ var AppOS = {
         var dot = document.getElementById('live-dot-' + id);
         var item = document.getElementById('radyo-item-' + id);
 
-        // 4. TV önbellek tıkanmasını aşmak için URL sonuna timestamp ekleyerek yeni obje oluştur
         var cacheBusterUrl = streamUrl + "?t=" + new Date().getTime();
         this.audioObj = new Audio(cacheBusterUrl);
         
@@ -760,7 +769,6 @@ var AppOS = {
         item.classList.add('active');
         this.currentRadioId = id;
 
-        // 5. Oynatmayı başlat
         var playPromise = this.audioObj.play();
 
         if (playPromise !== undefined) {
