@@ -538,31 +538,49 @@
         </div>
 
         <div class="media-dock">
-            <div class="media-dock-item active">
+            <!-- RADYO 1: RADYO 7 -->
+            <div class="media-dock-item" id="radyo-item-1">
                 <div class="media-icon">📻</div>
                 <div class="media-info">
                     <div class="media-title">RADYO 7</div>
                     <div class="media-sub">
-                        <div class="live-dot green" id="radyo-live-dot" style="display:none; width:6px; height:6px; margin-right:6px;"></div>
+                        <div class="live-dot green" id="live-dot-1" style="display:none; width:6px; height:6px; margin-right:6px;"></div>
                         Yayın
                     </div>
                 </div>
-                <div class="media-controls" onclick="AppOS.toggleRadio()">
-                    <span id="radio-play-btn">▶</span>
+                <div class="media-controls" onclick="AppOS.playRadio(1, 'https://canliyayin.radyotvonline.com/radyo7/icecast.audio')">
+                    <span id="play-btn-1">▶</span>
                 </div>
-                <audio id="radyo7-stream" preload="none" crossorigin="anonymous">
-                    <source src="https://canliyayin.radyo7.com/;stream.mp3" type="audio/mpeg">
-                    <source src="http://canliyayin.radyo7.com/;stream.mp3" type="audio/mpeg">
-                    <source src="https://canliyayin.radyotvonline.com/radyo7/icecast.audio" type="audio/mpeg">
-                </audio>
             </div>
 
-            <div class="media-dock-item empty">
-                <div class="media-icon">➕</div>
+            <!-- RADYO 2: JOY TÜRK -->
+            <div class="media-dock-item" id="radyo-item-2">
+                <div class="media-icon">🎵</div>
+                <div class="media-info">
+                    <div class="media-title">JOY TÜRK</div>
+                    <div class="media-sub">
+                        <div class="live-dot green" id="live-dot-2" style="display:none; width:6px; height:6px; margin-right:6px;"></div>
+                        Yayın
+                    </div>
+                </div>
+                <div class="media-controls" onclick="AppOS.playRadio(2, 'https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC')">
+                    <span id="play-btn-2">▶</span>
+                </div>
             </div>
 
-            <div class="media-dock-item empty">
-                <div class="media-icon">➕</div>
+            <!-- RADYO 3: METRO FM -->
+            <div class="media-dock-item" id="radyo-item-3">
+                <div class="media-icon">🎸</div>
+                <div class="media-info">
+                    <div class="media-title">METRO FM</div>
+                    <div class="media-sub">
+                        <div class="live-dot green" id="live-dot-3" style="display:none; width:6px; height:6px; margin-right:6px;"></div>
+                        Yayın
+                    </div>
+                </div>
+                <div class="media-controls" onclick="AppOS.playRadio(3, 'https://playerservices.streamtheworld.com/api/livestream-redirect/METRO_FM_SC')">
+                    <span id="play-btn-3">▶</span>
+                </div>
             </div>
         </div>
     </div>
@@ -676,6 +694,9 @@ function ajax(url, cb) {
 }
 
 var AppOS = {
+    audioObj: null,
+    currentRadioId: null,
+
     init: function() {
         this.handleScaling();
         this.initVideo(); 
@@ -705,37 +726,55 @@ var AppOS = {
         if (!full) { if (req) req.call(el); } else { if (ex) ex.call(d); }
     },
 
-    // ─── RADYO KONTROL FONKSİYONU ───
-    toggleRadio: function() {
-        var audio = document.getElementById('radyo7-stream');
-        var btn = document.getElementById('radio-play-btn');
-        var liveDot = document.getElementById('radyo-live-dot');
+    playRadio: function(id, streamUrl) {
+        // 1. Tüm butonları ve aktif durumları sıfırla
+        for(var i=1; i<=3; i++) {
+            document.getElementById('play-btn-' + i).innerText = '▶';
+            document.getElementById('live-dot-' + i).style.display = 'none';
+            document.getElementById('radyo-item-' + i).classList.remove('active');
+        }
+
+        // 2. Tıklanan radyo zaten çalıyorsa durdur ve çık
+        if (this.currentRadioId === id && this.audioObj && !this.audioObj.paused) {
+            this.audioObj.pause();
+            this.audioObj.src = ""; // TV önbelleğini temizlemek için kaynağı boşalt
+            this.currentRadioId = null;
+            return;
+        }
+
+        // 3. Farklı bir radyo çalıyorsa önceki bağlantıyı tamamen kopar
+        if (this.audioObj) {
+            this.audioObj.pause();
+            this.audioObj.src = "";
+        }
+
+        var btn = document.getElementById('play-btn-' + id);
+        var dot = document.getElementById('live-dot-' + id);
+        var item = document.getElementById('radyo-item-' + id);
+
+        // 4. TV önbellek tıkanmasını aşmak için URL sonuna timestamp ekleyerek yeni obje oluştur
+        var cacheBusterUrl = streamUrl + "?t=" + new Date().getTime();
+        this.audioObj = new Audio(cacheBusterUrl);
         
-        if (audio.paused) {
-            // Smart TV'lerde önbellek (buffer) takılmasını ve eski bağlantı kopmasını önlemek için yenile
-            audio.load();
-            
-            var playPromise = audio.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(function() {
-                    btn.innerText = '⏸';
-                    liveDot.style.display = 'inline-block';
-                }).catch(function(error) {
-                    console.error("Radyo başlatılamadı:", error);
-                    alert("Yayın bağlantısı kurulamadı. Tarayıcınız medya oynatmayı engelliyor olabilir.");
-                    btn.innerText = '▶';
-                    liveDot.style.display = 'none';
-                });
-            } else {
-                // playPromise yapısını desteklemeyen çok eski TV tarayıcıları için doğrudan durum değiştir
+        btn.innerText = '⏳'; 
+        item.classList.add('active');
+        this.currentRadioId = id;
+
+        // 5. Oynatmayı başlat
+        var playPromise = this.audioObj.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(function() {
                 btn.innerText = '⏸';
-                liveDot.style.display = 'inline-block';
-            }
+                dot.style.display = 'inline-block';
+            }).catch(function(error) {
+                console.error("Radyo başlatılamadı:", error);
+                btn.innerText = '▶';
+                item.classList.remove('active');
+            });
         } else {
-            audio.pause();
-            btn.innerText = '▶';
-            liveDot.style.display = 'none';
+            btn.innerText = '⏸';
+            dot.style.display = 'inline-block';
         }
     },
 
