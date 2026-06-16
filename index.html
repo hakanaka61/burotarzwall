@@ -31,7 +31,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Videonun ekranı tam kaplamasını sağlar */
+            object-fit: cover;
             -webkit-filter: brightness(0.55) contrast(1.1) saturate(0.9);
             filter: brightness(0.55) contrast(1.1) saturate(0.9);
         }
@@ -550,9 +550,9 @@
                 <div class="media-controls" onclick="AppOS.toggleRadio()">
                     <span id="radio-play-btn">▶</span>
                 </div>
-                <audio id="radyo7-stream" preload="none" crossorigin="anonymous">
+                <audio id="radyo7-stream" preload="none">
                     <source src="https://canliyayin.radyotvonline.com/radyo7/icecast.audio">
-                    <source src="https://radyo7.radyotvonline.net/radyo7/icecast.audio">
+                    <source src="https://canliyayin.radyo7.com/radyo7/radyo7/icecast.audio">
                 </audio>
             </div>
 
@@ -677,7 +677,7 @@ function ajax(url, cb) {
 var AppOS = {
     init: function() {
         this.handleScaling();
-        // Resim arka plan sistemi (this.initBackgrounds) video arka planı eklendiği için iptal edildi.
+        this.initVideo(); // Videoyu yavaşlatan fonksiyon
         this.buildClockFace();
         this.runClock();
         this.updateCalendar();
@@ -689,6 +689,15 @@ var AppOS = {
         window.addEventListener('resize', function() { self.handleScaling(); });
     },
 
+    // ─── VİDEO YAVAŞLATMA ───
+    initVideo: function() {
+        var vid = document.getElementById('bg-video');
+        if (vid) {
+            // Video hızını ayarlıyoruz (1.0 normal, 0.5 yarı hız vs.)
+            vid.playbackRate = 0.6; 
+        }
+    },
+
     toggleFullScreen: function() {
         var d = document, el = d.documentElement;
         var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
@@ -697,7 +706,7 @@ var AppOS = {
         if (!full) { if (req) req.call(el); } else { if (ex) ex.call(d); }
     },
 
-    // RADYO KONTROL FONKSİYONU
+    // ─── RADYO KONTROL FONKSİYONU ───
     toggleRadio: function() {
         var audio = document.getElementById('radyo7-stream');
         var btn = document.getElementById('radio-play-btn');
