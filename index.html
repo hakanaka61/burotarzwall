@@ -550,9 +550,10 @@
                 <div class="media-controls" onclick="AppOS.toggleRadio()">
                     <span id="radio-play-btn">▶</span>
                 </div>
-                <audio id="radyo7-stream" preload="none">
-                    <source src="https://canliyayin.radyotvonline.com/radyo7/icecast.audio">
-                    <source src="https://canliyayin.radyo7.com/radyo7/radyo7/icecast.audio">
+                <audio id="radyo7-stream" preload="none" crossorigin="anonymous">
+                    <source src="https://canliyayin.radyo7.com/;stream.mp3" type="audio/mpeg">
+                    <source src="http://canliyayin.radyo7.com/;stream.mp3" type="audio/mpeg">
+                    <source src="https://canliyayin.radyotvonline.com/radyo7/icecast.audio" type="audio/mpeg">
                 </audio>
             </div>
 
@@ -677,7 +678,7 @@ function ajax(url, cb) {
 var AppOS = {
     init: function() {
         this.handleScaling();
-        this.initVideo(); // Videoyu yavaşlatan fonksiyon
+        this.initVideo(); 
         this.buildClockFace();
         this.runClock();
         this.updateCalendar();
@@ -689,11 +690,9 @@ var AppOS = {
         window.addEventListener('resize', function() { self.handleScaling(); });
     },
 
-    // ─── VİDEO YAVAŞLATMA ───
     initVideo: function() {
         var vid = document.getElementById('bg-video');
         if (vid) {
-            // Video hızını ayarlıyoruz (1.0 normal, 0.5 yarı hız vs.)
             vid.playbackRate = 0.6; 
         }
     },
@@ -713,6 +712,9 @@ var AppOS = {
         var liveDot = document.getElementById('radyo-live-dot');
         
         if (audio.paused) {
+            // Smart TV'lerde önbellek (buffer) takılmasını ve eski bağlantı kopmasını önlemek için yenile
+            audio.load();
+            
             var playPromise = audio.play();
             
             if (playPromise !== undefined) {
@@ -721,9 +723,12 @@ var AppOS = {
                     liveDot.style.display = 'inline-block';
                 }).catch(function(error) {
                     console.error("Radyo başlatılamadı:", error);
-                    alert("Radyo yayın bağlantısı kurulamadı. Lütfen sunucuyu veya tarayıcı izinlerini kontrol edin.");
+                    alert("Yayın bağlantısı kurulamadı. Tarayıcınız medya oynatmayı engelliyor olabilir.");
+                    btn.innerText = '▶';
+                    liveDot.style.display = 'none';
                 });
             } else {
+                // playPromise yapısını desteklemeyen çok eski TV tarayıcıları için doğrudan durum değiştir
                 btn.innerText = '⏸';
                 liveDot.style.display = 'inline-block';
             }
@@ -929,7 +934,7 @@ var AppOS = {
         var cIdx   = 0;
 
         var sources = [
-            { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fmanset_articles.rss',      label: 'TRT HABER' },
+            { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fmanset_articles.rss',     label: 'TRT HABER' },
             { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.ntv.com.tr%2Frss%2Fgundem',              label: 'NTV GÜNDEM' },
             { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Frss.hurriyet.com.tr%2Frss%2Fgundem',         label: 'HÜRRİYET' },
             { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.sabah.com.tr%2Frss%2Fgundem.xml',        label: 'SABAH' },
