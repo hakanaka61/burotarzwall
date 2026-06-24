@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bürotarz - Executive Wall OS (Legacy TV Edition)</title>
+    <title>Bürotarz - Executive Wall OS (Sekmeli Versiyon)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +19,7 @@
             overflow: hidden;
             height: 100vh;
             width: 100vw;
+            transition: background-color 0.5s ease;
         }
 
         /* ─── VİDEO ARKA PLAN MOTORU ─── */
@@ -27,10 +28,7 @@
         }
         #bg-video {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover;
             -webkit-filter: brightness(0.55) contrast(1.1) saturate(0.9);
             filter: brightness(0.55) contrast(1.1) saturate(0.9);
@@ -52,10 +50,8 @@
         #fs-btn {
             position: fixed; top: 24px; right: 24px; z-index: 999;
             width: 44px; height: 44px;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(212,175,90,0.3);
-            border-radius: 10px;
-            color: #D4AF5A;
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(212,175,90,0.3);
+            border-radius: 10px; color: #D4AF5A;
             font-size: 22px; text-align: center; line-height: 44px;
             cursor: pointer; transition: all 0.3s ease;
         }
@@ -66,37 +62,32 @@
             position: absolute; width: 1880px; height: 960px;
             left: 50%; top: 50%;
             margin-left: -940px; margin-top: -480px;
-            -webkit-transform-origin: center center;
-            transform-origin: center center;
+            -webkit-transform-origin: center center; transform-origin: center center;
             z-index: 10;
         }
 
         /* ─── LOGO ─── */
         .header-brand {
             position: absolute; top: 22px; left: 50%; 
-            -webkit-transform: translateX(-50%);
-            transform: translateX(-50%);
+            -webkit-transform: translateX(-50%); transform: translateX(-50%);
             z-index: 20; text-align: center;
         }
         .header-brand img {
             height: 72px;
-            -webkit-filter: drop-shadow(0 4px 20px rgba(0,0,0,0.9));
-            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.9));
+            -webkit-filter: drop-shadow(0 4px 20px rgba(0,0,0,0.9)); filter: drop-shadow(0 4px 20px rgba(0,0,0,0.9));
         }
         .brand-sub {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 12px; letter-spacing: 10px; color: #D4AF5A;
+            font-family: 'Rajdhani', sans-serif; font-size: 12px; letter-spacing: 10px; color: #D4AF5A;
             margin-top: 4px; text-transform: uppercase; text-align: center;
         }
 
         /* ─── GLASS PANEL ─── */
         .glass-panel {
             background: rgba(5, 10, 18, 0.82);
-            border-radius: 22px;
-            border: 1px solid rgba(212, 175, 90, 0.18);
-            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 22px; border: 1px solid rgba(212, 175, 90, 0.18); border-top: 1px solid rgba(255, 255, 255, 0.22);
             box-shadow: 0 24px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08);
             position: absolute; height: 960px; overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .glass-panel::before {
             content: '';
@@ -108,293 +99,160 @@
 
         /* ─── SOL PANEL ─── */
         .panel-left { left: 0; top: 0; width: 480px; }
+        
+        /* Sol Panel İçerik Konteynerleri */
+        .home-content { transition: opacity 0.4s ease; opacity: 1; }
+        .radio-content { transition: opacity 0.4s ease; opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
         .module-header {
-            border-bottom: 1px solid rgba(212,175,90,0.15);
-            padding: 0 35px 15px;
+            border-bottom: 1px solid rgba(212,175,90,0.15); padding: 0 35px 15px;
             position: absolute; left: 0; width: 100%;
         }
         .mh-cal   { top: 30px; }
         .mh-news  { top: 390px; }
+        .mh-radio { top: 30px; }
 
         .module-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px; letter-spacing: 4px; font-weight: 700;
-            color: #8A8070; text-transform: uppercase;
-            display: flex; align-items: center;
+            font-family: 'Rajdhani', sans-serif; font-size: 13px; letter-spacing: 4px; font-weight: 700;
+            color: #8A8070; text-transform: uppercase; display: flex; align-items: center;
         }
         .module-title span, .module-title div { margin-right: 8px; }
         .module-title .accent { color: #D4AF5A; }
         .live-dot {
             width: 8px; height: 8px; background: #F87171; border-radius: 50%;
             box-shadow: 0 0 8px #F87171; flex-shrink: 0;
-            -webkit-animation: blink 2s ease-in-out infinite;
-            animation: blink 2s ease-in-out infinite;
+            -webkit-animation: blink 2s ease-in-out infinite; animation: blink 2s ease-in-out infinite;
         }
         .live-dot.green { background: #4ADE80; box-shadow: 0 0 8px #4ADE80; }
 
-        /* ─── TAKVİM ─── */
+        /* ─── TAKVİM (Ev Modu) ─── */
         .calendar-board {
             position: absolute; top: 80px; left: 35px; width: 410px;
-            background: -webkit-linear-gradient(-45deg, rgba(0,0,0,0.6) 0%, rgba(10,8,5,0.4) 100%);
-            background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(10,8,5,0.4) 100%);
-            border-radius: 18px;
-            border: 1px solid rgba(212,175,90,0.12);
-            padding: 30px 35px 28px;
-            display: flex; align-items: center;
+            background: -webkit-linear-gradient(-45deg, rgba(0,0,0,0.6) 0%, rgba(10,8,5,0.4) 100%); background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(10,8,5,0.4) 100%);
+            border-radius: 18px; border: 1px solid rgba(212,175,90,0.12); padding: 30px 35px 28px; display: flex; align-items: center;
         }
         .cal-left { flex: 1; }
-        .cal-day-num {
-            font-family: 'Teko', sans-serif;
-            font-size: 100px; line-height: 0.85; font-weight: 500;
-            color: #D4AF5A;
-            text-shadow: 0 0 40px rgba(212,175,90,0.3);
-        }
-        .cal-day-name {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 14px; font-weight: 700;
-            color: #8A8070; letter-spacing: 5px; margin-top: 10px;
-        }
+        .cal-day-num { font-family: 'Teko', sans-serif; font-size: 100px; line-height: 0.85; font-weight: 500; color: #D4AF5A; text-shadow: 0 0 40px rgba(212,175,90,0.3); }
+        .cal-day-name { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; color: #8A8070; letter-spacing: 5px; margin-top: 10px; }
         .cal-right { text-align: right; width: 140px; }
-        .cal-month {
-            font-family: 'Cinzel', serif;
-            font-size: 22px; font-weight: 700; color: #F0EDE8;
-            letter-spacing: 3px; line-height: 1.2;
-        }
-        .cal-year {
-            font-family: 'Teko', sans-serif;
-            font-size: 36px; color: #8A8070; letter-spacing: 2px;
-        }
-        .cal-divider {
-            width: 1px; height: 100px;
-            background: -webkit-linear-gradient(top, transparent, #9A7C35, transparent);
-            background: linear-gradient(to bottom, transparent, #9A7C35, transparent);
-            margin: 0 25px;
-        }
+        .cal-month { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; color: #F0EDE8; letter-spacing: 3px; line-height: 1.2; }
+        .cal-year { font-family: 'Teko', sans-serif; font-size: 36px; color: #8A8070; letter-spacing: 2px; }
+        .cal-divider { width: 1px; height: 100px; background: linear-gradient(to bottom, transparent, #9A7C35, transparent); margin: 0 25px; }
 
-        .cal-week-row {
-            position: absolute; top: 282px; left: 35px; width: 410px;
-            display: flex; justify-content: space-between;
-        }
-        .cal-wday {
-            width: 13%; text-align: center; padding: 8px 0;
-            font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700;
-            letter-spacing: 1px; color: #8A8070;
-            background: rgba(255,255,255,0.04); border-radius: 8px;
-            border: 1px solid transparent;
-        }
-        .cal-wday.today {
-            color: #D4AF5A; background: rgba(212,175,90,0.1);
-            border-color: rgba(212,175,90,0.25);
-        }
+        .cal-week-row { position: absolute; top: 282px; left: 35px; width: 410px; display: flex; justify-content: space-between; }
+        .cal-wday { width: 13%; text-align: center; padding: 8px 0; font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #8A8070; background: rgba(255,255,255,0.04); border-radius: 8px; border: 1px solid transparent; }
+        .cal-wday.today { color: #D4AF5A; background: rgba(212,175,90,0.1); border-color: rgba(212,175,90,0.25); }
 
-        /* ─── HABERLER ─── */
-        .news-wrapper {
-            position: absolute; top: 430px; left: 35px; width: 410px;
-            height: 495px; overflow: hidden;
-        }
+        /* ─── HABERLER (Ev Modu) ─── */
+        .news-wrapper { position: absolute; top: 430px; left: 35px; width: 410px; height: 495px; overflow: hidden; }
         .news-track { -webkit-transition: opacity 0.6s ease; transition: opacity 0.6s ease; }
-        .news-card {
-            background: -webkit-linear-gradient(-45deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-            border-left: 3px solid #9A7C35;
-            border-radius: 12px; padding: 18px 20px;
-            margin-bottom: 14px; position: relative;
-        }
-        .news-source {
-            font-size: 10px; letter-spacing: 3px; color: #D4AF5A;
-            font-weight: 700; margin-bottom: 8px; display: block;
-        }
-        .news-headline {
-            font-size: 13.5px; line-height: 1.55; font-weight: 500;
-            color: #F0EDE8; display: block;
-        }
-        .news-time {
-            font-size: 11px; color: #8A8070;
-            position: absolute; top: 18px; right: 18px;
-            font-family: 'Rajdhani', sans-serif; font-weight: 600;
-        }
+        .news-card { background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%); border-left: 3px solid #9A7C35; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; position: relative; }
+        .news-source { font-size: 10px; letter-spacing: 3px; color: #D4AF5A; font-weight: 700; margin-bottom: 8px; display: block; }
+        .news-headline { font-size: 13.5px; line-height: 1.55; font-weight: 500; color: #F0EDE8; display: block; }
+        .news-time { font-size: 11px; color: #8A8070; position: absolute; top: 18px; right: 18px; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
 
-        /* ─── ORTA PANEL ─── */
+        /* ─── RADYO LİSTESİ (Radyo Modu) ─── */
+        .radio-list-wrapper {
+            position: absolute; top: 80px; left: 35px; width: calc(100% - 70px); height: 850px;
+            overflow-y: auto; padding-right: 15px;
+        }
+        /* Özel Scrollbar */
+        .radio-list-wrapper::-webkit-scrollbar { width: 6px; }
+        .radio-list-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .radio-list-wrapper::-webkit-scrollbar-thumb { background: rgba(212,175,90,0.3); border-radius: 10px; }
+        .radio-list-wrapper::-webkit-scrollbar-thumb:hover { background: rgba(212,175,90,0.6); }
+
+        .radio-list-item {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.4) 100%);
+            border: 1px solid rgba(212,175,90,0.1); border-radius: 14px;
+            padding: 20px; margin-bottom: 15px; display: flex; align-items: center;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .radio-list-item:hover { border-color: rgba(212,175,90,0.3); background: rgba(212,175,90,0.05); transform: translateY(-2px); }
+        .radio-list-item.active { border-color: rgba(212,175,90,0.6); box-shadow: inset 0 0 20px rgba(212,175,90,0.1); }
+        
+        .r-icon { font-size: 32px; margin-right: 20px; color: #D4AF5A; }
+        .r-info { flex: 1; }
+        .r-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #F0EDE8; letter-spacing: 1px; line-height: 1.1; }
+        .r-sub { font-size: 13px; color: #8A8070; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; }
+        .r-controls {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(212,175,90,0.15); border: 1px solid rgba(212,175,90,0.3);
+            display: flex; align-items: center; justify-content: center;
+            color: #D4AF5A; font-size: 18px; transition: all 0.2s ease;
+        }
+        .radio-list-item.active .r-controls { background: rgba(212,175,90,0.9); color: #000; }
+        .radio-list-item:hover .r-controls { background: rgba(212,175,90,0.5); color: #fff; }
+
+        /* ─── ORTA PANEL (Saat ve Navigasyon) ─── */
         .panel-center {
-            position: absolute; left: 520px; top: 0;
-            width: 840px; height: 960px;
+            position: absolute; left: 520px; top: 0; width: 840px; height: 960px;
         }
 
         .clock-outer-ring {
-            width: 510px; height: 510px;
-            border-radius: 50%;
-            background: -webkit-linear-gradient(45deg, #2a2218, #D4AF5A, #2a2218, #D4AF5A, #2a2218);
+            width: 510px; height: 510px; border-radius: 50%;
             background: linear-gradient(45deg, #2a2218, #D4AF5A, #2a2218, #D4AF5A, #2a2218);
             box-shadow: 0 0 0 2px rgba(212,175,90,0.1), 0 30px 80px rgba(0,0,0,0.9), 0 0 60px rgba(212,175,90,0.15), inset 0 2px 8px rgba(255,255,255,0.3);
             position: absolute; left: 50%; top: 140px; margin-left: -255px;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .clock-middle-ring {
             width: 484px; height: 484px; border-radius: 50%;
-            background: -webkit-linear-gradient(305deg, #1a1208, #0d0a05);
             background: linear-gradient(145deg, #1a1208, #0d0a05);
             box-shadow: inset 0 4px 12px rgba(0,0,0,0.9), inset 0 -2px 6px rgba(212,175,90,0.1);
             position: absolute; top: 13px; left: 13px;
         }
         .clock-face {
-            width: 454px; height: 454px; border-radius: 50%;
-            background: #E8E0D0;
+            width: 454px; height: 454px; border-radius: 50%; background: #E8E0D0;
             box-shadow: inset 0 8px 25px rgba(0,0,0,0.35), inset 0 -5px 15px rgba(255,255,255,0.6);
             position: absolute; top: 15px; left: 15px; overflow: visible;
         }
         .clock-markers { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
         .c-marker { position: absolute; left: 50%; top: 50%; }
-
-        .clock-roman-nums {
-            position: absolute; top:0; left:0; right:0; bottom:0; border-radius: 50%;
-        }
-        .rom-num {
-            position: absolute; font-family: 'Cinzel', serif;
-            font-size: 16px; font-weight: 700; color: #1a1208;
-            -webkit-transform-origin: center; transform-origin: center;
-        }
-
-        .clock-brand-center {
-            position: absolute; width: 100%; text-align: center; top: 150px;
-        }
-        .c-brand-name {
-            font-family: 'Cinzel', serif; font-size: 18px;
-            font-weight: 900; letter-spacing: 6px; color: #1a1208;
-        }
-        .c-brand-sub {
-            font-family: 'Montserrat', sans-serif; font-size: 8px;
-            font-weight: 600; letter-spacing: 3px; color: #6a5a40; margin-top: 3px;
-        }
+        .clock-roman-nums { position: absolute; top:0; left:0; right:0; bottom:0; border-radius: 50%; }
+        .rom-num { position: absolute; font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; color: #1a1208; transform-origin: center; }
+        .clock-brand-center { position: absolute; width: 100%; text-align: center; top: 150px; }
+        .c-brand-name { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 900; letter-spacing: 6px; color: #1a1208; }
+        .c-brand-sub { font-family: 'Montserrat', sans-serif; font-size: 8px; font-weight: 600; letter-spacing: 3px; color: #6a5a40; margin-top: 3px; }
 
         /* Eller */
         .c-hand-layer { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 10; }
-        .c-hand {
-            position: absolute; bottom: 50%; left: 50%;
-            -webkit-transform-origin: bottom center;
-            transform-origin: bottom center;
-            border-radius: 4px 4px 2px 2px;
-        }
-        .c-hour {
-            width: 12px; height: 120px; margin-left: -6px;
-            background: #2a2010;
-            box-shadow: 2px 3px 8px rgba(0,0,0,0.4);
-            border-radius: 5px 5px 3px 3px;
-        }
-        .c-minute {
-            width: 7px; height: 175px; margin-left: -3.5px;
-            background: #1a1208;
-            box-shadow: 1px 3px 6px rgba(0,0,0,0.35);
-        }
-        .c-second {
-            width: 2px; height: 195px; margin-left: -1px;
-            background: #C0392B;
-            border-radius: 2px 2px 0 0;
-        }
-        .c-second::after {
-            content: '';
-            position: absolute; bottom: -50px; left: -3px;
-            width: 8px; height: 50px; background: #C0392B; border-radius: 2px;
-        }
-        .c-pin {
-            position: absolute; top: 50%; left: 50%;
-            width: 18px; height: 18px; border-radius: 50%;
-            margin: -9px 0 0 -9px; z-index: 20;
-            background: #D4AF5A;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 10px rgba(212,175,90,0.5);
-            border: 2px solid #0a0806;
-        }
+        .c-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px 4px 2px 2px; }
+        .c-hour { width: 12px; height: 120px; margin-left: -6px; background: #2a2010; box-shadow: 2px 3px 8px rgba(0,0,0,0.4); border-radius: 5px 5px 3px 3px; }
+        .c-minute { width: 7px; height: 175px; margin-left: -3.5px; background: #1a1208; box-shadow: 1px 3px 6px rgba(0,0,0,0.35); }
+        .c-second { width: 2px; height: 195px; margin-left: -1px; background: #C0392B; border-radius: 2px 2px 0 0; }
+        .c-second::after { content: ''; position: absolute; bottom: -50px; left: -3px; width: 8px; height: 50px; background: #C0392B; border-radius: 2px; }
+        .c-pin { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; border-radius: 50%; margin: -9px 0 0 -9px; z-index: 20; background: #D4AF5A; box-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 10px rgba(212,175,90,0.5); border: 2px solid #0a0806; }
 
         /* Dijital kutu */
         .digital-clock-box {
-            background: rgba(0,0,0,0.85);
-            border: 1px solid rgba(212,175,90,0.2);
-            border-top: 1px solid rgba(212,175,90,0.35);
-            padding: 14px 0; border-radius: 16px;
-            text-align: center;
-            font-family: 'Teko', sans-serif; font-size: 58px;
-            font-weight: 500; color: #FFF; letter-spacing: 6px;
+            background: rgba(0,0,0,0.85); border: 1px solid rgba(212,175,90,0.2); border-top: 1px solid rgba(212,175,90,0.35);
+            padding: 14px 0; border-radius: 16px; text-align: center;
+            font-family: 'Teko', sans-serif; font-size: 58px; font-weight: 500; color: #FFF; letter-spacing: 6px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 0 30px rgba(0,0,0,0.9);
-            position: absolute; left: 50%; bottom: 120px;
-            width: 320px; margin-left: -160px;
+            position: absolute; left: 50%; bottom: 120px; width: 320px; margin-left: -160px;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .digi-blink { -webkit-animation: blink 2s ease-in-out infinite; animation: blink 2s ease-in-out infinite; color: #D4AF5A; margin: 0 4px; }
+        .digi-blink { animation: blink 2s ease-in-out infinite; color: #D4AF5A; margin: 0 4px; }
         .digi-sec { font-size: 32px; color: #555; margin-left: 8px; }
 
-        /* ─── MEDYA / RADYO DOCK ─── */
-        .media-dock {
-            position: absolute;
-            bottom: 35px;
-            left: 50%;
-            margin-left: -270px;
-            width: 540px;
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
+        /* ─── NAVİGASYON (SAYFA DEĞİŞTİRİCİ) ─── */
+        .nav-dock {
+            position: absolute; bottom: 35px; left: 50%; margin-left: -270px; width: 540px;
+            display: flex; justify-content: space-between; gap: 15px;
+            transition: opacity 0.5s ease;
         }
-        .media-dock-item {
-            background: rgba(0,0,0,0.6);
-            border: 1px solid rgba(212,175,90,0.15);
-            border-radius: 14px;
-            height: 64px;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-            transition: all 0.3s ease;
+        .nav-item {
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(212,175,90,0.15); border-radius: 14px;
+            height: 64px; flex: 1; display: flex; align-items: center; justify-content: center;
+            font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #8A8070;
+            letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.6);
         }
-        .media-dock-item.active {
-            border-color: rgba(212,175,90,0.5);
-            background: -webkit-linear-gradient(-45deg, rgba(212,175,90,0.1) 0%, rgba(0,0,0,0.85) 100%);
+        .nav-item:hover { background: rgba(212,175,90,0.1); color: #F0EDE8; border-color: rgba(212,175,90,0.4); }
+        .nav-item.active {
+            border-color: rgba(212,175,90,0.6); color: #D4AF5A;
             background: linear-gradient(135deg, rgba(212,175,90,0.1) 0%, rgba(0,0,0,0.85) 100%);
-        }
-        .media-dock-item.empty {
-            justify-content: center;
-            opacity: 0.4;
-            border-style: dashed;
-            background: rgba(0,0,0,0.3);
-        }
-        .media-icon {
-            font-size: 24px;
-            margin-right: 12px;
-            color: #D4AF5A;
-        }
-        .media-info {
-            flex: 1;
-        }
-        .media-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            color: #F0EDE8;
-            letter-spacing: 1px;
-            line-height: 1.2;
-        }
-        .media-sub {
-            font-size: 11px;
-            color: #8A8070;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            margin-top: 2px;
-        }
-        .media-controls {
-            width: 36px;
-            height: 36px;
-            background: rgba(212,175,90,0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #D4AF5A;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(212,175,90,0.3);
-        }
-        .media-controls:hover {
-            background: rgba(212,175,90,0.9);
-            color: #000;
+            box-shadow: 0 0 20px rgba(212,175,90,0.15);
         }
 
         /* ─── SAĞ PANEL ─── */
@@ -402,25 +260,14 @@
 
         .weather-board {
             position: absolute; top: 80px; left: 35px; width: 410px;
-            background: -webkit-linear-gradient(-45deg, rgba(0,0,0,0.55) 0%, rgba(10,8,5,0.35) 100%);
             background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(10,8,5,0.35) 100%);
-            border-radius: 18px; border: 1px solid rgba(212,175,90,0.1);
-            padding: 28px 30px;
+            border-radius: 18px; border: 1px solid rgba(212,175,90,0.1); padding: 28px 30px;
         }
-        .w-loc {
-            font-family: 'Rajdhani', sans-serif; font-size: 11px;
-            color: #D4AF5A; letter-spacing: 6px; font-weight: 700; text-transform: uppercase;
-        }
+        .w-loc { font-family: 'Rajdhani', sans-serif; font-size: 11px; color: #D4AF5A; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; }
         .w-main { display: flex; justify-content: space-between; align-items: flex-end; margin: 18px 0 22px; }
-        .w-temp {
-            font-family: 'Teko', sans-serif; font-size: 96px;
-            line-height: 0.8; font-weight: 500; color: #F0EDE8;
-        }
+        .w-temp { font-family: 'Teko', sans-serif; font-size: 96px; line-height: 0.8; font-weight: 500; color: #F0EDE8; }
         .w-temp sup { font-size: 36px; vertical-align: top; margin-top: 15px; }
-        .w-desc {
-            font-size: 14px; font-weight: 600; color: #C0B898;
-            margin-top: 10px; letter-spacing: 2px; text-transform: uppercase;
-        }
+        .w-desc { font-size: 14px; font-weight: 600; color: #C0B898; margin-top: 10px; letter-spacing: 2px; text-transform: uppercase; }
         .w-icon { font-size: 70px; line-height: 1; }
         
         .w-details { border-top: 1px solid rgba(212,175,90,0.1); padding-top: 20px; font-size: 0; }
@@ -430,26 +277,15 @@
         .w-det-val { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #F0EDE8; line-height: 1; }
         .w-det-lbl { font-size: 10px; color: #8A8070; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
 
-        .finance-section {
-            position: absolute; bottom: 30px; left: 35px; width: 410px;
-        }
-        .fin-header {
-            border-bottom: 1px solid rgba(212,175,90,0.15);
-            padding-bottom: 14px; margin-bottom: 16px;
-        }
+        .finance-section { position: absolute; bottom: 30px; left: 35px; width: 410px; }
+        .fin-header { border-bottom: 1px solid rgba(212,175,90,0.15); padding-bottom: 14px; margin-bottom: 16px; }
 
         .fin-card {
-            background: -webkit-linear-gradient(-45deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.4) 100%);
             background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.4) 100%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px; padding: 16px 20px;
-            margin-bottom: 12px; position: relative;
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px; position: relative;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .fin-card::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-            border-radius: 14px 0 0 14px;
-        }
+        .fin-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 14px 0 0 14px; }
         .fin-card.up::before { background: #4ADE80; box-shadow: 0 0 12px #4ADE80; }
         .fin-card.down::before { background: #F87171; box-shadow: 0 0 12px #F87171; }
 
@@ -466,11 +302,31 @@
         .fin-change.down { color: #F87171; }
         .fin-updated { font-size: 10px; color: #8A8070; letter-spacing: 2px; text-align: right; margin-top: 8px; }
 
+        /* ─── GÖRÜNÜM MODLARI (VIEW STATES) ─── */
+        
+        /* 1. ANA SAYFA MODU (Varsayılan) */
+        body.view-home .home-content { opacity: 1; pointer-events: auto; }
+        body.view-home .radio-content { opacity: 0; pointer-events: none; }
+        body.view-home .panel-left { width: 480px; }
+
+        /* 2. RADYO MODU */
+        body.view-radio .home-content { opacity: 0; pointer-events: none; }
+        body.view-radio .radio-content { opacity: 1; pointer-events: auto; }
+        body.view-radio .panel-left { width: 500px; } /* Sol panel radyoda biraz genişliyor */
+
+        /* 3. ZEN / SAAT MODU (Sadece Arkaplan ve Saat) */
+        body.view-zen .panel-left { transform: translateX(-100px); opacity: 0; pointer-events: none; }
+        body.view-zen .panel-right { transform: translateX(100px); opacity: 0; pointer-events: none; }
+        
+        /* Zen modunda nav-dock transparanlaşır, sadece fareyle gelince gözükür (geri dönebilmek için) */
+        body.view-zen .nav-dock { opacity: 0.1; }
+        body.view-zen .nav-dock:hover { opacity: 1; }
+
         @-webkit-keyframes blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
         @keyframes blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
     </style>
 </head>
-<body>
+<body class="view-home">
 
 <div id="bg-engine">
     <video id="bg-video" src="main.mp4" autoplay loop muted playsinline></video>
@@ -489,30 +345,88 @@
 <div id="app-core">
 
     <div class="glass-panel panel-left">
-        <div class="module-header mh-cal">
-            <div class="module-title"><span class="accent">📅</span> AJANDA & TARİH</div>
-        </div>
-        <div class="calendar-board">
-            <div class="cal-left">
-                <div class="cal-day-num" id="cal-day-num">--</div>
-                <div class="cal-day-name" id="cal-day-name">------</div>
+        
+        <div class="home-content">
+            <div class="module-header mh-cal">
+                <div class="module-title"><span class="accent">📅</span> AJANDA & TARİH</div>
             </div>
-            <div class="cal-divider"></div>
-            <div class="cal-right">
-                <div class="cal-month" id="cal-month">-------</div>
-                <div class="cal-year" id="cal-year">----</div>
+            <div class="calendar-board">
+                <div class="cal-left">
+                    <div class="cal-day-num" id="cal-day-num">--</div>
+                    <div class="cal-day-name" id="cal-day-name">------</div>
+                </div>
+                <div class="cal-divider"></div>
+                <div class="cal-right">
+                    <div class="cal-month" id="cal-month">-------</div>
+                    <div class="cal-year" id="cal-year">----</div>
+                </div>
             </div>
-        </div>
-        <div class="cal-week-row" id="cal-week-row"></div>
+            <div class="cal-week-row" id="cal-week-row"></div>
 
-        <div class="module-header mh-news">
-            <div class="module-title"><div class="live-dot"></div> SON DAKİKA & CANLI GÜNDEM</div>
-        </div>
-        <div class="news-wrapper">
-            <div class="news-track" id="news-track">
-                <div class="news-card"><span class="news-headline" style="color:#555;">Haber akışı yükleniyor...</span></div>
+            <div class="module-header mh-news">
+                <div class="module-title"><div class="live-dot"></div> SON DAKİKA & CANLI GÜNDEM</div>
+            </div>
+            <div class="news-wrapper">
+                <div class="news-track" id="news-track">
+                    <div class="news-card"><span class="news-headline" style="color:#555;">Haber akışı yükleniyor...</span></div>
+                </div>
             </div>
         </div>
+
+        <div class="radio-content">
+            <div class="module-header mh-radio">
+                <div class="module-title"><span class="accent">📻</span> RADYO İSTASYONLARI</div>
+            </div>
+            <div class="radio-list-wrapper">
+                
+                <div class="radio-list-item" id="radyo-item-1" onclick="AppOS.playRadio(1, 'https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM_SC')">
+                    <div class="r-icon">🎧</div>
+                    <div class="r-info">
+                        <div class="r-title">SÜPER FM</div>
+                        <div class="r-sub"><div class="live-dot green" id="live-dot-1" style="display:none; width:6px; height:6px; margin-right:6px;"></div> Türkçe Pop</div>
+                    </div>
+                    <div class="r-controls"><span id="play-btn-1">▶</span></div>
+                </div>
+
+                <div class="radio-list-item" id="radyo-item-2" onclick="AppOS.playRadio(2, 'https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC')">
+                    <div class="r-icon">🎵</div>
+                    <div class="r-info">
+                        <div class="r-title">JOY TÜRK</div>
+                        <div class="r-sub"><div class="live-dot green" id="live-dot-2" style="display:none; width:6px; height:6px; margin-right:6px;"></div> Türkçe Slow</div>
+                    </div>
+                    <div class="r-controls"><span id="play-btn-2">▶</span></div>
+                </div>
+
+                <div class="radio-list-item" id="radyo-item-3" onclick="AppOS.playRadio(3, 'https://playerservices.streamtheworld.com/api/livestream-redirect/METRO_FM_SC')">
+                    <div class="r-icon">🎸</div>
+                    <div class="r-info">
+                        <div class="r-title">METRO FM</div>
+                        <div class="r-sub"><div class="live-dot green" id="live-dot-3" style="display:none; width:6px; height:6px; margin-right:6px;"></div> Yabancı Hit</div>
+                    </div>
+                    <div class="r-controls"><span id="play-btn-3">▶</span></div>
+                </div>
+
+                <div class="radio-list-item" id="radyo-item-4" onclick="AppOS.playRadio(4, 'https://playerservices.streamtheworld.com/api/livestream-redirect/VIRGIN_RADIO_SC')">
+                    <div class="r-icon">🔊</div>
+                    <div class="r-info">
+                        <div class="r-title">VIRGIN RADIO</div>
+                        <div class="r-sub"><div class="live-dot green" id="live-dot-4" style="display:none; width:6px; height:6px; margin-right:6px;"></div> Yabancı Pop / Dans</div>
+                    </div>
+                    <div class="r-controls"><span id="play-btn-4">▶</span></div>
+                </div>
+                
+                <div class="radio-list-item" id="radyo-item-5" onclick="AppOS.playRadio(5, 'https://ssg.radyotvonline.net/kralpop1/stream/playlist.m3u8')">
+                    <div class="r-icon">👑</div>
+                    <div class="r-info">
+                        <div class="r-title">KRAL POP</div>
+                        <div class="r-sub"><div class="live-dot green" id="live-dot-5" style="display:none; width:6px; height:6px; margin-right:6px;"></div> Türkçe Hit</div>
+                    </div>
+                    <div class="r-controls"><span id="play-btn-5">▶</span></div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
     <div class="panel-center">
@@ -537,51 +451,10 @@
             <span id="digi-h">00</span><span class="digi-blink">:</span><span id="digi-m">00</span><span class="digi-sec" id="digi-s">00</span>
         </div>
 
-        <div class="media-dock">
-            <!-- RADYO 1: SÜPER FM -->
-            <div class="media-dock-item" id="radyo-item-1">
-                <div class="media-icon">🎧</div>
-                <div class="media-info">
-                    <div class="media-title">SÜPER FM</div>
-                    <div class="media-sub">
-                        <div class="live-dot green" id="live-dot-1" style="display:none; width:6px; height:6px; margin-right:6px;"></div>
-                        Yayın
-                    </div>
-                </div>
-                <div class="media-controls" onclick="AppOS.playRadio(1, 'https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM_SC')">
-                    <span id="play-btn-1">▶</span>
-                </div>
-            </div>
-
-            <!-- RADYO 2: JOY TÜRK -->
-            <div class="media-dock-item" id="radyo-item-2">
-                <div class="media-icon">🎵</div>
-                <div class="media-info">
-                    <div class="media-title">JOY TÜRK</div>
-                    <div class="media-sub">
-                        <div class="live-dot green" id="live-dot-2" style="display:none; width:6px; height:6px; margin-right:6px;"></div>
-                        Yayın
-                    </div>
-                </div>
-                <div class="media-controls" onclick="AppOS.playRadio(2, 'https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC')">
-                    <span id="play-btn-2">▶</span>
-                </div>
-            </div>
-
-            <!-- RADYO 3: METRO FM -->
-            <div class="media-dock-item" id="radyo-item-3">
-                <div class="media-icon">🎸</div>
-                <div class="media-info">
-                    <div class="media-title">METRO FM</div>
-                    <div class="media-sub">
-                        <div class="live-dot green" id="live-dot-3" style="display:none; width:6px; height:6px; margin-right:6px;"></div>
-                        Yayın
-                    </div>
-                </div>
-                <div class="media-controls" onclick="AppOS.playRadio(3, 'https://playerservices.streamtheworld.com/api/livestream-redirect/METRO_FM_SC')">
-                    <span id="play-btn-3">▶</span>
-                </div>
-            </div>
+        <div class="nav-dock">
+            <div class="nav-item active" id="nav-home" onclick="AppOS.switchView('home')">🏠 ANA SAYFA</div>
+            <div class="nav-item" id="nav-radio" onclick="AppOS.switchView('radio')">📻 RADYO</div>
+            <div class="nav-item" id="nav-zen" onclick="AppOS.switchView('zen')">🕒 ZEN MOD</div>
         </div>
     </div>
 
@@ -710,24 +583,26 @@ var AppOS = {
         setInterval(function() { self.updateCalendar(); }, 60000);
         window.addEventListener('resize', function() { self.handleScaling(); });
     },
+    
+    // GÖRÜNÜM DEĞİŞTİRİCİ FONKSİYON
+    switchView: function(viewName) {
+        document.body.className = 'view-' + viewName;
+        
+        // Navigasyon butonlarının aktifliğini güncelle
+        document.getElementById('nav-home').classList.remove('active');
+        document.getElementById('nav-radio').classList.remove('active');
+        document.getElementById('nav-zen').classList.remove('active');
+        
+        document.getElementById('nav-' + viewName).classList.add('active');
+    },
 
     initVideo: function() {
         var vid = document.getElementById('bg-video');
         if (vid) {
             vid.playbackRate = 0.6; 
             vid.muted = true; 
-            
-            // TV tarayıcıları radyo açıldığında arka plan videosunu siyah ekrana düşürmemek için saniyede bir oynatma kontrolü
-            setInterval(function() {
-                if (vid.paused) {
-                    vid.play().catch(function(e){});
-                }
-            }, 1000);
-
-            vid.addEventListener('ended', function() {
-                vid.currentTime = 0;
-                vid.play().catch(function(e){});
-            }, false);
+            setInterval(function() { if (vid.paused) { vid.play().catch(function(e){}); } }, 1000);
+            vid.addEventListener('ended', function() { vid.currentTime = 0; vid.play().catch(function(e){}); }, false);
         }
     },
 
@@ -740,7 +615,8 @@ var AppOS = {
     },
 
     playRadio: function(id, streamUrl) {
-        for(var i=1; i<=3; i++) {
+        // Toplam 5 radyo kanalı var
+        for(var i=1; i<=5; i++) {
             document.getElementById('play-btn-' + i).innerText = '▶';
             document.getElementById('live-dot-' + i).style.display = 'none';
             document.getElementById('radyo-item-' + i).classList.remove('active');
@@ -805,8 +681,7 @@ var AppOS = {
             var angle = (i * 6 - 90) * (Math.PI / 180);
             var x = r * Math.cos(angle) - w / 2;
             var y = r * Math.sin(angle) - h / 2;
-            el.style.width = w + 'px';
-            el.style.height = h + 'px';
+            el.style.width = w + 'px'; el.style.height = h + 'px';
             el.style.background = isHour ? '#1a1208' : '#6a5a40';
             el.style.webkitTransform = 'translate(' + x + 'px,' + y + 'px) rotate(' + (i * 6) + 'deg)';
             el.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + (i * 6) + 'deg)';
@@ -823,48 +698,28 @@ var AppOS = {
             var radius = 185;
             var rx = 227 + radius * Math.cos(a);
             var ry = 227 + radius * Math.sin(a);
-            rEl.style.left = rx + 'px';
-            rEl.style.top = ry + 'px';
-            rEl.style.webkitTransform = 'translate(-50%,-50%)';
-            rEl.style.transform = 'translate(-50%,-50%)';
+            rEl.style.left = rx + 'px'; rEl.style.top = ry + 'px';
+            rEl.style.webkitTransform = 'translate(-50%,-50%)'; rEl.style.transform = 'translate(-50%,-50%)';
             rEl.innerText = romans[j];
             romCont.appendChild(rEl);
         }
     },
 
     runClock: function() {
-        var hh = document.getElementById('hh');
-        var mh = document.getElementById('mh');
-        var sh = document.getElementById('sh');
-        var dH = document.getElementById('digi-h');
-        var dM = document.getElementById('digi-m');
-        var dS = document.getElementById('digi-s');
+        var hh = document.getElementById('hh'); var mh = document.getElementById('mh'); var sh = document.getElementById('sh');
+        var dH = document.getElementById('digi-h'); var dM = document.getElementById('digi-m'); var dS = document.getElementById('digi-s');
         var lastS = -1;
 
         var tick = function() {
-            var d  = new Date();
-            var ms = d.getMilliseconds();
-            var s  = d.getSeconds();
-            var m  = d.getMinutes();
-            var h  = d.getHours();
+            var d  = new Date(); var ms = d.getMilliseconds(); var s = d.getSeconds(); var m = d.getMinutes(); var h = d.getHours();
+            var sDeg = (s + ms / 1000) * 6; var mDeg = (m + s / 60) * 6; var hDeg = ((h % 12) + m / 60) * 30;
 
-            var sDeg = (s + ms / 1000) * 6;
-            var mDeg = (m + s / 60) * 6;
-            var hDeg = ((h % 12) + m / 60) * 30;
-
-            sh.style.webkitTransform = 'rotateZ(' + sDeg + 'deg)';
-            mh.style.webkitTransform = 'rotateZ(' + mDeg + 'deg)';
-            hh.style.webkitTransform = 'rotateZ(' + hDeg + 'deg)';
-            
-            sh.style.transform = 'rotateZ(' + sDeg + 'deg)';
-            mh.style.transform = 'rotateZ(' + mDeg + 'deg)';
-            hh.style.transform = 'rotateZ(' + hDeg + 'deg)';
+            sh.style.webkitTransform = 'rotateZ(' + sDeg + 'deg)'; mh.style.webkitTransform = 'rotateZ(' + mDeg + 'deg)'; hh.style.webkitTransform = 'rotateZ(' + hDeg + 'deg)';
+            sh.style.transform = 'rotateZ(' + sDeg + 'deg)'; mh.style.transform = 'rotateZ(' + mDeg + 'deg)'; hh.style.transform = 'rotateZ(' + hDeg + 'deg)';
 
             if (s !== lastS) {
                 lastS = s;
-                dH.innerText = pad(h);
-                dM.innerText = pad(m);
-                dS.innerText = pad(s);
+                dH.innerText = pad(h); dM.innerText = pad(m); dS.innerText = pad(s);
             }
             setTimeout(tick, 50);
         };
@@ -875,21 +730,17 @@ var AppOS = {
         var MONTHS  = ['OCAK','ŞUBAT','MART','NİSAN','MAYIS','HAZİRAN','TEMMUZ','AĞUSTOS','EYLÜL','EKİM','KASIM','ARALIK'];
         var DAYS    = ['PAZARTESİ','SALI','ÇARŞAMBA','PERŞEMBE','CUMA','CUMARTESİ','PAZAR'];
         var DAYSSHORT = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
-        var d = new Date();
-        var dow = d.getDay();
-        var trDay = (dow + 6) % 7;
+        var d = new Date(); var dow = d.getDay(); var trDay = (dow + 6) % 7;
 
         document.getElementById('cal-day-num').innerText  = d.getDate();
         document.getElementById('cal-month').innerText    = MONTHS[d.getMonth()];
         document.getElementById('cal-year').innerText     = d.getFullYear();
         document.getElementById('cal-day-name').innerText = DAYS[trDay];
 
-        var row = document.getElementById('cal-week-row');
-        row.innerHTML = '';
+        var row = document.getElementById('cal-week-row'); row.innerHTML = '';
         for (var i = 0; i < 7; i++) {
             var btn = document.createElement('div');
-            btn.className = 'cal-wday' + (i === trDay ? ' today' : '');
-            btn.innerText = DAYSSHORT[i];
+            btn.className = 'cal-wday' + (i === trDay ? ' today' : ''); btn.innerText = DAYSSHORT[i];
             row.appendChild(btn);
         }
     },
@@ -906,8 +757,7 @@ var AppOS = {
                 document.getElementById('w-wind').innerText = Math.round(c.wind_speed_10m);
                 document.getElementById('w-pres').innerText = Math.round(c.surface_pressure);
 
-                var code = c.weather_code;
-                var icon = '☀️', desc = 'AÇIK VE GÜNEŞLİ';
+                var code = c.weather_code; var icon = '☀️', desc = 'AÇIK VE GÜNEŞLİ';
                 if (code >= 1  && code <= 3)  { icon = '⛅'; desc = 'PARÇALI BULUTLU'; }
                 if (code >= 45 && code <= 48) { icon = '🌫️'; desc = 'SİSLİ'; }
                 if (code >= 51 && code <= 67) { icon = '🌧️'; desc = 'YAĞMURLU'; }
@@ -915,33 +765,22 @@ var AppOS = {
                 if (code >= 80 && code <= 82) { icon = '🌦️'; desc = 'SAĞANAK Y.'; }
                 if (code >= 95)               { icon = '⛈️'; desc = 'FIRTINALI'; }
 
-                document.getElementById('w-icon').innerText = icon;
-                document.getElementById('w-desc').innerText = desc;
+                document.getElementById('w-icon').innerText = icon; document.getElementById('w-desc').innerText = desc;
             });
         };
-        fetch();
-        setInterval(fetch, 300000);
+        fetch(); setInterval(fetch, 300000);
     },
 
     initFinance: function() {
         var primaryUrl  = 'https://finans.truncgil.com/v3/today.json';
-        
         var applyCard = function(id, priceStr, chgStr, dec) {
-            var card  = document.getElementById('fin-' + id);
-            var valEl = document.getElementById('val-' + id);
-            var chgEl = document.getElementById('chg-' + id);
-
+            var card  = document.getElementById('fin-' + id); var valEl = document.getElementById('val-' + id); var chgEl = document.getElementById('chg-' + id);
             if (!priceStr) return;
-            var price = parseFloat(priceStr.replace(/\./g,'').replace(',','.'));
-            var chg   = parseFloat((chgStr || '0').replace('%','').replace(',','.'));
+            var price = parseFloat(priceStr.replace(/\./g,'').replace(',','.')); var chg = parseFloat((chgStr || '0').replace('%','').replace(',','.'));
             if (isNaN(price)) return;
-
-            var isUp = chg >= 0;
-            var fmt  = price.toFixed(dec).replace('.', ',');
-            valEl.innerText = fmt;
-            chgEl.innerHTML = (isUp ? '▲' : '▼') + ' ' + Math.abs(chg).toFixed(2) + '%';
-            chgEl.className = 'fin-change ' + (isUp ? 'up' : 'down');
-            card.className  = 'fin-card ' + (isUp ? 'up' : 'down');
+            var isUp = chg >= 0; var fmt = price.toFixed(dec).replace('.', ',');
+            valEl.innerText = fmt; chgEl.innerHTML = (isUp ? '▲' : '▼') + ' ' + Math.abs(chg).toFixed(2) + '%';
+            chgEl.className = 'fin-change ' + (isUp ? 'up' : 'down'); card.className  = 'fin-card ' + (isUp ? 'up' : 'down');
         };
 
         var fetchPrimary = function() {
@@ -950,36 +789,27 @@ var AppOS = {
                     if (data['gram-altin']) applyCard('gold', data['gram-altin'].Selling, data['gram-altin'].Change, 2);
                     if (data['USD'])        applyCard('usd',  data['USD'].Selling,        data['USD'].Change,        4);
                     if (data['EUR'])        applyCard('eur',  data['EUR'].Selling,        data['EUR'].Change,        4);
-
                     var now = new Date();
-                    document.getElementById('fin-updated').innerText =
-                        'Güncellendi: ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+                    document.getElementById('fin-updated').innerText = 'Güncellendi: ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
                 } else {
                     ajax('https://open.er-api.com/v6/latest/USD', function(err2, data2) {
                         if (!err2 && data2 && data2.rates) {
-                            var tryRate = data2.rates['TRY'] || 0;
-                            var eurRate = data2.rates['EUR'] || 0;
+                            var tryRate = data2.rates['TRY'] || 0; var eurRate = data2.rates['EUR'] || 0;
                             if (tryRate > 0) {
                                 document.getElementById('val-usd').innerText = tryRate.toFixed(4).replace('.', ',');
                                 document.getElementById('val-eur').innerText = (tryRate / eurRate).toFixed(4).replace('.', ',');
-                                document.getElementById('chg-usd').innerText = 'Yedek kaynak';
-                                document.getElementById('chg-eur').innerText = 'Yedek kaynak';
+                                document.getElementById('chg-usd').innerText = 'Yedek kaynak'; document.getElementById('chg-eur').innerText = 'Yedek kaynak';
                             }
                         }
                     });
                 }
             });
         };
-
-        fetchPrimary();
-        setInterval(fetchPrimary, 15000);
+        fetchPrimary(); setInterval(fetchPrimary, 15000);
     },
 
     initNews: function() {
-        var track  = document.getElementById('news-track');
-        var items  = [];
-        var cIdx   = 0;
-
+        var track  = document.getElementById('news-track'); var items  = []; var cIdx   = 0;
         var sources = [
             { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.trthaber.com%2Fmanset_articles.rss',     label: 'TRT HABER' },
             { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.ntv.com.tr%2Frss%2Fgundem',              label: 'NTV GÜNDEM' },
@@ -988,8 +818,7 @@ var AppOS = {
             { url: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cnnturk.com%2Fapi%2Frss%2Fcnnturk%2Fturk-haber-rss', label: 'CNN TÜRK' }
         ];
 
-        var loadedCount = 0;
-        var allItems    = [];
+        var loadedCount = 0; var allItems    = [];
 
         var render = function() {
             if (allItems.length === 0) return;
@@ -997,22 +826,16 @@ var AppOS = {
             setTimeout(function() {
                 track.innerHTML = '';
                 for (var i = 0; i < 3; i++) {
-                    var n   = allItems[(cIdx + i) % allItems.length];
-                    var t   = '';
+                    var n   = allItems[(cIdx + i) % allItems.length]; var t   = '';
                     if (n.pubDate) {
                         var d = new Date(n.pubDate.replace(/-/g,'/'));
                         if (!isNaN(d.getTime())) t = pad(d.getHours()) + ':' + pad(d.getMinutes());
                     }
-                    var card = document.createElement('div');
-                    card.className = 'news-card';
-                    card.innerHTML =
-                        '<span class="news-source">' + (n._source || 'AJANS') + '</span>' +
-                        '<span class="news-headline">' + (n.title || '') + '</span>' +
-                        (t ? '<div class="news-time">' + t + '</div>' : '');
+                    var card = document.createElement('div'); card.className = 'news-card';
+                    card.innerHTML = '<span class="news-source">' + (n._source || 'AJANS') + '</span>' + '<span class="news-headline">' + (n.title || '') + '</span>' + (t ? '<div class="news-time">' + t + '</div>' : '');
                     track.appendChild(card);
                 }
-                cIdx = (cIdx + 3) % allItems.length;
-                track.style.opacity = '1';
+                cIdx = (cIdx + 3) % allItems.length; track.style.opacity = '1';
             }, 600);
         };
 
@@ -1021,44 +844,24 @@ var AppOS = {
                 loadedCount++;
                 if (!err && data && data.status === 'ok' && data.items) {
                     var fresh = data.items.slice(0, 8);
-                    for (var i = 0; i < fresh.length; i++) {
-                        fresh[i]._source = src.label;
-                        allItems.push(fresh[i]);
-                    }
-                    allItems.sort(function(a, b) {
-                        return new Date(b.pubDate || 0) - new Date(a.pubDate || 0);
-                    });
-                    var seen = {};
-                    var filtered = [];
+                    for (var i = 0; i < fresh.length; i++) { fresh[i]._source = src.label; allItems.push(fresh[i]); }
+                    allItems.sort(function(a, b) { return new Date(b.pubDate || 0) - new Date(a.pubDate || 0); });
+                    var seen = {}; var filtered = [];
                     for(var k=0; k<allItems.length; k++) {
                         var x = allItems[k];
                         if (x.title) {
                             var key = x.title.substring(0, 40);
-                            if (!seen[key]) {
-                                seen[key] = true;
-                                filtered.push(x);
-                            }
+                            if (!seen[key]) { seen[key] = true; filtered.push(x); }
                         }
                     }
                     allItems = filtered.slice(0, 30);
                 }
-                if (loadedCount === sources.length && allItems.length > 0) {
-                    render();
-                }
+                if (loadedCount === sources.length && allItems.length > 0) { render(); }
             });
         };
 
-        var fetchAll = function() {
-            loadedCount = 0;
-            allItems    = [];
-            for (var i = 0; i < sources.length; i++) {
-                fetchSource(sources[i]);
-            }
-        };
-
-        fetchAll();
-        setInterval(render,   20000); 
-        setInterval(fetchAll, 300000); 
+        var fetchAll = function() { loadedCount = 0; allItems = []; for (var i = 0; i < sources.length; i++) { fetchSource(sources[i]); } };
+        fetchAll(); setInterval(render, 20000); setInterval(fetchAll, 300000); 
     }
 };
 
