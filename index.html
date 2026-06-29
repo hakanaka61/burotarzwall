@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1920, user-scalable=no">
-    <title>Bürotarz - Executive Wall OS (TV Edition V2)</title>
+    <title>Bürotarz - Executive Wall OS (Universal TV Edition V2)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,12 +21,15 @@
             width: 1920px;
         }
 
-        /* ─── ARKA PLAN MOTORU (HİBRİT) ─── */
+        /* ─── ARKA PLAN MOTORU (HİBRİT VE ESKİ TV UYUMLU) ─── */
         #bg-engine { 
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; background: #000; 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; background: #000; overflow: hidden;
         }
         #bg-video {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+            position: absolute; top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%; width: auto; height: auto;
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
             display: block; opacity: 1;
             -webkit-filter: brightness(0.55) contrast(1.1); filter: brightness(0.55) contrast(1.1);
         }
@@ -72,7 +75,7 @@
 
         /* ─── GLASS PANEL (TV OPTİMİZE) ─── */
         .glass-panel {
-            background: rgba(5, 10, 18, 0.9); /* TV işlemcisi için opaklık biraz artırıldı */
+            background: rgba(5, 10, 18, 0.9);
             border-radius: 22px; border: 1px solid rgba(212, 175, 90, 0.2);
             position: absolute; height: 960px; overflow: hidden;
         }
@@ -256,18 +259,21 @@
         /* ─── TV MOD DURUM STİLLERİ (VIEW MODES) ─── */
         body.view-radio .home-content { display: none; }
         body.view-radio .radio-content { display: block; }
-        body.view-radio .panel-left { width: 500px; } /* Radyo modunda sol panel genişler */
+        body.view-radio .panel-left { width: 500px; }
 
         body.view-zen .panel-left { display: none; }
         body.view-zen .panel-right { display: none; }
-        body.view-zen .nav-dock { opacity: 0.05; } /* TV'de tamamen kaybolmasın, kumandayla seçilebilsin */
+        body.view-zen .nav-dock { opacity: 0.05; }
         body.view-zen .nav-dock:hover { opacity: 1; }
     </style>
 </head>
 <body class="view-home" id="body-root">
 
+<!-- ESKİ TV'LERDE MEMORY LEAK (BELLEK SIZINTISI) OLMAMASI İÇİN FİZİKSEL SES ETİKETİ EKLENDİ -->
+<audio id="radio-player" style="display:none;" preload="none"></audio>
+
 <div id="bg-engine">
-    <video id="bg-video" src="main.mp4" autoplay loop muted playsinline poster="poster.jpeg" onerror="AppOS.handleVideoError()"></video>
+    <video id="bg-video" src="main.mp4" autoplay loop muted playsinline poster="poster.jpeg"></video>
     <div id="bg-poster"></div>
 </div>
 <div class="bg-overlay"></div>
@@ -501,7 +507,6 @@
 <script>
 'use strict';
 
-// ES5 Yardımcı fonksiyonları
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
 function ajax(url, cb) {
@@ -520,7 +525,6 @@ function ajax(url, cb) {
 }
 
 var AppOS = {
-    audioObj: null,
     currentRadioId: null,
     isVideoPlaying: true,
 
@@ -539,7 +543,6 @@ var AppOS = {
         window.addEventListener('resize', function() { self.handleScaling(); });
     },
     
-    // ES5 Uyumlu Güvenli Sayfa Geçiş Motoru
     switchView: function(viewName) {
         document.getElementById('body-root').className = 'view-' + viewName;
         
@@ -550,7 +553,7 @@ var AppOS = {
         var activeNav = document.getElementById('nav-' + viewName);
         if(viewName === 'zen') {
             activeNav.className = 'nav-item last active';
-            document.getElementById('brand-area').style.display = 'none'; // Zen modda logoyu gizle
+            document.getElementById('brand-area').style.display = 'none'; 
         } else {
             activeNav.className = 'nav-item active';
             document.getElementById('brand-area').style.display = 'block';
@@ -563,8 +566,8 @@ var AppOS = {
             try {
                 vid.playbackRate = 0.6; 
                 vid.muted = true; 
+                vid.defaultMuted = true;
                 
-                // TV tarayıcı kilitlenmelerine karşı saniyelik bekçi (Watchdog) kontrolü
                 setInterval(function() { 
                     if (AppOS.isVideoPlaying && vid.paused) { 
                         vid.play().catch(function(e){}); 
@@ -581,13 +584,12 @@ var AppOS = {
         }
     },
 
-    // TV Dekoder Çakışması Algılandığında Tetiklenen Emniyet Sistemi
     handleVideoError: function() {
         this.isVideoPlaying = false;
         var vid = document.getElementById('bg-video');
         var poster = document.getElementById('bg-poster');
         if(vid) vid.style.display = 'none';
-        if(poster) poster.style.display = 'block'; // Siyah ekran yerine poster.jpeg'e güvenli geçiş
+        if(poster) poster.style.display = 'block'; 
     },
 
     toggleFullScreen: function() {
@@ -599,29 +601,29 @@ var AppOS = {
     },
 
     playRadio: function(id, streamUrl) {
-        // TV Donanımını yormamak için önce mevcut akışı tamamen imha et
-        if (this.audioObj) {
-            this.audioObj.pause();
-            this.audioObj.src = "";
-            this.audioObj = null;
-        }
-
-        // Arayüz temizliği
+        var player = document.getElementById('radio-player');
+        
         for(var i=1; i<=3; i++) {
             document.getElementById('play-btn-' + i).innerText = '▶';
             document.getElementById('live-dot-' + i).style.display = 'none';
             document.getElementById('radyo-item-' + i).className = 'radio-list-item';
         }
 
-        // Eğer tıklanan zaten çalıyorsa durdurma işlemi tamamlandı, çık
-        if (this.currentRadioId === id) {
+        if (this.currentRadioId === id && !player.paused) {
+            player.pause();
+            player.removeAttribute('src'); 
+            player.load();
             this.currentRadioId = null;
-            // Radyo durduğunda TV izin veriyorsa videoyu canlandırmayı dene
+            
             var vid = document.getElementById('bg-video');
             if(vid && this.isVideoPlaying) vid.play().catch(function(e){});
             return;
         }
 
+        player.pause();
+        var cacheBusterUrl = streamUrl + "?t=" + new Date().getTime();
+        player.src = cacheBusterUrl;
+        
         var btn = document.getElementById('play-btn-' + id);
         var dot = document.getElementById('live-dot-' + id);
         var item = document.getElementById('radyo-item-' + id);
@@ -630,40 +632,28 @@ var AppOS = {
         item.className = 'radio-list-item active';
         this.currentRadioId = id;
 
-        try {
-            // TV önbellekleme hatasını çözmek için benzersiz zaman damgası URL'i
-            var cacheBusterUrl = streamUrl + "?t=" + new Date().getTime();
-            this.audioObj = new Audio();
-            this.audioObj.src = cacheBusterUrl;
-            
-            // TV işletim sistemi dekoder yönetimi kuralı
-            this.audioObj.addEventListener('playing', function() {
+        var playPromise = player.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(function() {
                 btn.innerText = '⏸';
                 dot.style.display = 'inline-block';
-            });
-
-            this.audioObj.addEventListener('error', function() {
+            }).catch(function(error) {
                 btn.innerText = '▶';
                 item.className = 'radio-list-item';
                 AppOS.currentRadioId = null;
             });
-
-            this.audioObj.play();
-
-            // Eski TV dekoder çakışma koruması test tetiklemesi
-            setTimeout(function() {
-                var v = document.getElementById('bg-video');
-                if (v && v.paused && AppOS.currentRadioId !== null) {
-                    // Eğer video çöktüyse sessizce poster moduna geç ki ekran kararmasın
-                    AppOS.handleVideoError();
-                }
-            }, 1500);
-
-        } catch(error) {
-            btn.innerText = '▶';
-            item.className = 'radio-list-item';
-            this.currentRadioId = null;
+        } else {
+            btn.innerText = '⏸';
+            dot.style.display = 'inline-block';
         }
+
+        setTimeout(function() {
+            var v = document.getElementById('bg-video');
+            if (v && v.paused && AppOS.currentRadioId !== null) {
+                AppOS.handleVideoError();
+            }
+        }, 1500);
     },
 
     handleScaling: function() {
@@ -725,9 +715,9 @@ var AppOS = {
                 lastS = s;
                 dH.innerText = pad(h); dM.innerText = pad(m); dS.innerText = pad(s);
             }
-            setTimeout(tick, 50);
+            window.requestAnimationFrame(tick);
         };
-        tick();
+        window.requestAnimationFrame(tick);
     },
 
     updateCalendar: function() {
