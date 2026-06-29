@@ -2,8 +2,8 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1920, user-scalable=no">
-    <title>Bürotarz - Executive Wall OS (Universal TV Edition V2)</title>
+    <meta name="viewport" content="width=1920, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>Bürotarz - Executive Wall OS (Universal TV Edition V3)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,44 +17,41 @@
             font-family: 'Montserrat', sans-serif;
             color: #F0EDE8;
             overflow: hidden;
-            height: 1080px;
             width: 1920px;
+            height: 1080px;
+            position: relative;
         }
 
-        /* ─── ARKA PLAN MOTORU (HİBRİT VE ESKİ TV UYUMLU) ─── */
+        /* ─── ARKA PLAN MOTORU ─── */
         #bg-engine { 
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; background: #000; overflow: hidden;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; background: #000; overflow: hidden;
         }
+        /* Kare sorununu çözen basit konumlandırma */
         #bg-video {
-            position: absolute; top: 50%; left: 50%;
-            min-width: 100%; min-height: 100%; width: auto; height: auto;
-            -webkit-transform: translateX(-50%) translateY(-50%);
-            transform: translateX(-50%) translateY(-50%);
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
             display: block; opacity: 1;
             -webkit-filter: brightness(0.55) contrast(1.1); filter: brightness(0.55) contrast(1.1);
         }
-        /* Video çökerse devreye girecek güvenli poster katmanı */
+        /* Görsel arka plan */
         #bg-poster {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('poster.jpeg'); background-size: cover; background-position: center;
-            display: none; opacity: 0.4;
+            background-image: url('poster.jpeg'); 
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            display: none; /* Başlangıçta gizli */
+            opacity: 0.6;
+            z-index: 2; /* Videonun üstüne çıkmasını garanti eder */
         }
 
         .bg-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 2;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 3;
             background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.8) 100%);
         }
         .bg-overlay::after {
-            content: ''; position: fixed; bottom: 0; left: 0; right: 0; height: 3px; z-index: 3;
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; z-index: 4;
             background: linear-gradient(90deg, transparent, #D4AF5A, transparent);
-        }
-
-        /* ─── TAM EKRAN BUTONU ─── */
-        #fs-btn {
-            position: fixed; top: 24px; right: 24px; z-index: 999;
-            width: 44px; height: 44px; background: rgba(0,0,0,0.6); border: 1px solid rgba(212,175,90,0.3);
-            border-radius: 10px; color: #D4AF5A; font-size: 22px; text-align: center; line-height: 44px;
-            cursor: pointer;
         }
 
         /* ─── ANA KAFES ─── */
@@ -63,217 +60,61 @@
             margin-left: -940px; margin-top: -480px; z-index: 10;
         }
 
-        /* ─── LOGO ─── */
+        /* Diğer arayüz stilleri aynen korunmuştur */
+        #fs-btn {
+            position: absolute; top: 24px; right: 24px; z-index: 999;
+            width: 44px; height: 44px; background: rgba(0,0,0,0.6); border: 1px solid rgba(212,175,90,0.3);
+            border-radius: 10px; color: #D4AF5A; font-size: 22px; text-align: center; line-height: 44px; cursor: pointer;
+        }
         .header-brand {
             position: absolute; top: 22px; left: 50%; margin-left: -200px; width: 400px; z-index: 20; text-align: center;
         }
         .header-brand img { height: 72px; }
-        .brand-sub {
-            font-family: 'Rajdhani', sans-serif; font-size: 12px; letter-spacing: 10px; color: #D4AF5A;
-            margin-top: 4px; text-transform: uppercase; text-align: center;
-        }
-
-        /* ─── GLASS PANEL (TV OPTİMİZE) ─── */
-        .glass-panel {
-            background: rgba(5, 10, 18, 0.9);
-            border-radius: 22px; border: 1px solid rgba(212, 175, 90, 0.2);
-            position: absolute; height: 960px; overflow: hidden;
-        }
-
-        /* ─── SOL PANEL VE İÇERİKLERİ ─── */
+        .brand-sub { font-family: 'Rajdhani', sans-serif; font-size: 12px; letter-spacing: 10px; color: #D4AF5A; margin-top: 4px; text-transform: uppercase; text-align: center; }
+        .glass-panel { background: rgba(5, 10, 18, 0.9); border-radius: 22px; border: 1px solid rgba(212, 175, 90, 0.2); position: absolute; height: 960px; overflow: hidden; }
         .panel-left { left: 0; top: 0; width: 480px; display: block; }
-        
         .home-content { display: block; }
         .radio-content { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        .module-header {
-            border-bottom: 1px solid rgba(212,175,90,0.15); padding: 0 35px 15px; position: absolute; left: 0; width: 100%;
-        }
-        .mh-cal   { top: 30px; }
-        .mh-news  { top: 390px; }
-        .mh-radio { top: 30px; }
-
-        .module-title {
-            font-family: 'Rajdhani', sans-serif; font-size: 13px; letter-spacing: 4px; font-weight: 700;
-            color: #8A8070; text-transform: uppercase; display: block; line-height: 20px;
-        }
+        .module-header { border-bottom: 1px solid rgba(212,175,90,0.15); padding: 0 35px 15px; position: absolute; left: 0; width: 100%; }
+        .mh-cal { top: 30px; } .mh-news { top: 390px; } .mh-radio { top: 30px; }
+        .module-title { font-family: 'Rajdhani', sans-serif; font-size: 13px; letter-spacing: 4px; font-weight: 700; color: #8A8070; text-transform: uppercase; display: block; line-height: 20px; }
         .module-title .accent { color: #D4AF5A; margin-right: 5px; }
-        
-        .live-dot {
-            display: inline-block; width: 8px; height: 8px; background: #F87171; border-radius: 50%;
-            vertical-align: middle; margin-right: 6px;
-        }
+        .live-dot { display: inline-block; width: 8px; height: 8px; background: #F87171; border-radius: 50%; vertical-align: middle; margin-right: 6px; }
         .live-dot.green { background: #4ADE80; }
-
-        /* TAKVİM */
-        .calendar-board {
-            position: absolute; top: 80px; left: 35px; width: 410px;
-            background: rgba(10,8,5,0.6); border-radius: 18px; border: 1px solid rgba(212,175,90,0.12);
-            padding: 30px 35px 28px;
-        }
-        .cal-container { display: table; width: 100%; }
-        .cal-left-cell { display: table-cell; vertical-align: middle; }
-        .cal-divider-cell { display: table-cell; width: 1px; background: #9A7C35; opacity: 0.3; }
-        .cal-right-cell { display: table-cell; vertical-align: middle; text-align: right; padding-left: 20px; }
-        
-        .cal-day-num { font-family: 'Teko', sans-serif; font-size: 100px; line-height: 0.85; font-weight: 500; color: #D4AF5A; }
-        .cal-day-name { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; color: #8A8070; letter-spacing: 5px; margin-top: 10px; }
-        .cal-month { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; color: #F0EDE8; letter-spacing: 3px; line-height: 1.2; }
-        .cal-year { font-family: 'Teko', sans-serif; font-size: 36px; color: #8A8070; letter-spacing: 2px; }
-
-        .cal-week-row { position: absolute; top: 282px; left: 35px; width: 410px; }
-        .cal-wday { display: inline-block; width: 52px; text-align: center; padding: 8px 0; font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700; color: #8A8070; background: rgba(255,255,255,0.04); border-radius: 8px; margin-right: 5px; }
-        .cal-wday.today { color: #D4AF5A; background: rgba(212,175,90,0.15); border: 1px solid rgba(212,175,90,0.3); }
-
-        /* HABERLER */
-        .news-wrapper { position: absolute; top: 430px; left: 35px; width: 410px; height: 495px; overflow: hidden; }
-        .news-card { background: rgba(255,255,255,0.03); border-left: 3px solid #9A7C35; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; position: relative; }
-        .news-source { font-size: 10px; letter-spacing: 3px; color: #D4AF5A; font-weight: 700; margin-bottom: 8px; display: block; }
-        .news-headline { font-size: 13.5px; line-height: 1.55; font-weight: 500; color: #F0EDE8; display: block; }
-        .news-time { font-size: 11px; color: #8A8070; position: absolute; top: 18px; right: 18px; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
-
-        /* RADYO GÖRÜNÜMÜ LİSTESİ */
-        .radio-list-wrapper {
-            position: absolute; top: 80px; left: 35px; width: calc(100% - 70px); height: 850px; overflow-y: auto;
-        }
-        .radio-list-item {
-            background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,90,0.15); border-radius: 14px;
-            padding: 20px; margin-bottom: 15px; display: block; position: relative; cursor: pointer;
-        }
-        .radio-list-item.active { border-color: rgba(212,175,90,0.7); background: rgba(212,175,90,0.08); }
-        
-        .r-table { display: table; width: 100%; }
-        .r-cell-icon { display: table-cell; width: 50px; font-size: 32px; vertical-align: middle; color: #D4AF5A; }
-        .r-cell-info { display: table-cell; vertical-align: middle; }
-        .r-cell-ctrl { display: table-cell; width: 50px; text-align: right; vertical-align: middle; }
-
-        .r-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #F0EDE8; letter-spacing: 1px; }
-        .r-sub { font-size: 13px; color: #8A8070; margin-top: 5px; text-transform: uppercase; }
-        
-        .r-controls {
-            width: 48px; height: 48px; border-radius: 50%; background: rgba(212,175,90,0.15); border: 1px solid rgba(212,175,90,0.3);
-            text-align: center; line-height: 46px; color: #D4AF5A; font-size: 18px; display: inline-block;
-        }
-        .radio-list-item.active .r-controls { background: #D4AF5A; color: #000; }
-
-        /* ─── ORTA PANEL ─── */
+        .calendar-board { position: absolute; top: 80px; left: 35px; width: 410px; background: rgba(10,8,5,0.6); border-radius: 18px; border: 1px solid rgba(212,175,90,0.12); padding: 30px 35px 28px; }
+        .cal-container { display: table; width: 100%; } .cal-left-cell { display: table-cell; vertical-align: middle; } .cal-divider-cell { display: table-cell; width: 1px; background: #9A7C35; opacity: 0.3; } .cal-right-cell { display: table-cell; vertical-align: middle; text-align: right; padding-left: 20px; }
+        .cal-day-num { font-family: 'Teko', sans-serif; font-size: 100px; line-height: 0.85; font-weight: 500; color: #D4AF5A; } .cal-day-name { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; color: #8A8070; letter-spacing: 5px; margin-top: 10px; } .cal-month { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; color: #F0EDE8; letter-spacing: 3px; line-height: 1.2; } .cal-year { font-family: 'Teko', sans-serif; font-size: 36px; color: #8A8070; letter-spacing: 2px; }
+        .cal-week-row { position: absolute; top: 282px; left: 35px; width: 410px; } .cal-wday { display: inline-block; width: 52px; text-align: center; padding: 8px 0; font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700; color: #8A8070; background: rgba(255,255,255,0.04); border-radius: 8px; margin-right: 5px; } .cal-wday.today { color: #D4AF5A; background: rgba(212,175,90,0.15); border: 1px solid rgba(212,175,90,0.3); }
+        .news-wrapper { position: absolute; top: 430px; left: 35px; width: 410px; height: 495px; overflow: hidden; } .news-card { background: rgba(255,255,255,0.03); border-left: 3px solid #9A7C35; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; position: relative; } .news-source { font-size: 10px; letter-spacing: 3px; color: #D4AF5A; font-weight: 700; margin-bottom: 8px; display: block; } .news-headline { font-size: 13.5px; line-height: 1.55; font-weight: 500; color: #F0EDE8; display: block; } .news-time { font-size: 11px; color: #8A8070; position: absolute; top: 18px; right: 18px; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
+        .radio-list-wrapper { position: absolute; top: 80px; left: 35px; width: calc(100% - 70px); height: 850px; overflow-y: auto; }
+        .radio-list-item { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,90,0.15); border-radius: 14px; padding: 20px; margin-bottom: 15px; display: block; position: relative; cursor: pointer; } .radio-list-item.active { border-color: rgba(212,175,90,0.7); background: rgba(212,175,90,0.08); }
+        .r-table { display: table; width: 100%; } .r-cell-icon { display: table-cell; width: 50px; font-size: 32px; vertical-align: middle; color: #D4AF5A; } .r-cell-info { display: table-cell; vertical-align: middle; } .r-cell-ctrl { display: table-cell; width: 50px; text-align: right; vertical-align: middle; }
+        .r-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #F0EDE8; letter-spacing: 1px; } .r-sub { font-size: 13px; color: #8A8070; margin-top: 5px; text-transform: uppercase; }
+        .r-controls { width: 48px; height: 48px; border-radius: 50%; background: rgba(212,175,90,0.15); border: 1px solid rgba(212,175,90,0.3); text-align: center; line-height: 46px; color: #D4AF5A; font-size: 18px; display: inline-block; } .radio-list-item.active .r-controls { background: #D4AF5A; color: #000; }
         .panel-center { position: absolute; left: 520px; top: 0; width: 840px; height: 960px; }
-
-        .clock-outer-ring {
-            width: 510px; height: 510px; border-radius: 50%;
-            background: linear-gradient(45deg, #2a2218, #D4AF5A, #2a2218, #D4AF5A, #2a2218);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-            position: absolute; left: 50%; top: 140px; margin-left: -255px;
-        }
-        .clock-middle-ring { width: 484px; height: 484px; border-radius: 50%; background: #110c06; position: absolute; top: 13px; left: 13px; }
-        .clock-face { width: 454px; height: 454px; border-radius: 50%; background: #E8E0D0; position: absolute; top: 15px; left: 15px; }
-        .clock-markers { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
-        .c-marker { position: absolute; left: 50%; top: 50%; }
-        .clock-roman-nums { position: absolute; top:0; left:0; right:0; bottom:0; border-radius: 50%; }
-        .rom-num { position: absolute; font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; color: #1a1208; }
-        .clock-brand-center { position: absolute; width: 100%; text-align: center; top: 150px; }
-        .c-brand-name { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 900; letter-spacing: 6px; color: #1a1208; }
-        .c-brand-sub { font-family: 'Montserrat', sans-serif; font-size: 8px; font-weight: 600; letter-spacing: 3px; color: #6a5a40; margin-top: 3px; }
-
-        /* Saat Kolları */
-        .c-hand-layer { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 10; }
-        .c-hand { position: absolute; bottom: 50%; left: 50%; }
-        .c-hour { width: 12px; height: 120px; margin-left: -6px; background: #2a2010; border-radius: 5px 5px 3px 3px; }
-        .c-minute { width: 7px; height: 175px; margin-left: -3.5px; background: #1a1208; }
-        .c-second { width: 2px; height: 195px; margin-left: -1px; background: #C0392B; }
-        .c-pin { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; border-radius: 50%; margin: -9px 0 0 -9px; z-index: 20; background: #D4AF5A; border: 2px solid #0a0806; }
-
-        /* Dijital Kutu */
-        .digital-clock-box {
-            background: rgba(0,0,0,0.9); border: 1px solid rgba(212,175,90,0.2); padding: 14px 0; border-radius: 16px; text-align: center;
-            font-family: 'Teko', sans-serif; font-size: 58px; font-weight: 500; color: #FFF; letter-spacing: 6px;
-            position: absolute; left: 50%; bottom: 120px; width: 320px; margin-left: -160px;
-        }
-        .digi-blink { color: #D4AF5A; margin: 0 4px; }
-        .digi-sec { font-size: 32px; color: #555; margin-left: 8px; }
-
-        /* NAVİGASYON (ALT BAR) */
-        .nav-dock {
-            position: absolute; bottom: 35px; left: 50%; margin-left: -270px; width: 540px; display: block;
-        }
-        .nav-item {
-            background: rgba(0,0,0,0.7); border: 1px solid rgba(212,175,90,0.15); border-radius: 14px;
-            height: 64px; width: 170px; display: inline-block; margin-right: 10px; text-align: center; line-height: 62px;
-            font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #8A8070; letter-spacing: 2px; cursor: pointer;
-        }
-        .nav-item.last { margin-right: 0; }
-        .nav-item.active { border-color: rgba(212,175,90,0.6); color: #D4AF5A; background: rgba(212,175,90,0.15); }
-
-        /* ─── SAĞ PANEL ─── */
+        .clock-outer-ring { width: 510px; height: 510px; border-radius: 50%; background: linear-gradient(45deg, #2a2218, #D4AF5A, #2a2218, #D4AF5A, #2a2218); box-shadow: 0 20px 50px rgba(0,0,0,0.9); position: absolute; left: 50%; top: 140px; margin-left: -255px; } .clock-middle-ring { width: 484px; height: 484px; border-radius: 50%; background: #110c06; position: absolute; top: 13px; left: 13px; } .clock-face { width: 454px; height: 454px; border-radius: 50%; background: #E8E0D0; position: absolute; top: 15px; left: 15px; } .clock-markers { position: absolute; width: 100%; height: 100%; top: 0; left: 0; } .c-marker { position: absolute; left: 50%; top: 50%; } .clock-roman-nums { position: absolute; top:0; left:0; right:0; bottom:0; border-radius: 50%; } .rom-num { position: absolute; font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; color: #1a1208; } .clock-brand-center { position: absolute; width: 100%; text-align: center; top: 150px; } .c-brand-name { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 900; letter-spacing: 6px; color: #1a1208; } .c-brand-sub { font-family: 'Montserrat', sans-serif; font-size: 8px; font-weight: 600; letter-spacing: 3px; color: #6a5a40; margin-top: 3px; }
+        .c-hand-layer { position: absolute; top:0; left:0; right:0; bottom:0; z-index: 10; } .c-hand { position: absolute; bottom: 50%; left: 50%; } .c-hour { width: 12px; height: 120px; margin-left: -6px; background: #2a2010; border-radius: 5px 5px 3px 3px; } .c-minute { width: 7px; height: 175px; margin-left: -3.5px; background: #1a1208; } .c-second { width: 2px; height: 195px; margin-left: -1px; background: #C0392B; } .c-pin { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; border-radius: 50%; margin: -9px 0 0 -9px; z-index: 20; background: #D4AF5A; border: 2px solid #0a0806; }
+        .digital-clock-box { background: rgba(0,0,0,0.9); border: 1px solid rgba(212,175,90,0.2); padding: 14px 0; border-radius: 16px; text-align: center; font-family: 'Teko', sans-serif; font-size: 58px; font-weight: 500; color: #FFF; letter-spacing: 6px; position: absolute; left: 50%; bottom: 120px; width: 320px; margin-left: -160px; } .digi-blink { color: #D4AF5A; margin: 0 4px; } .digi-sec { font-size: 32px; color: #555; margin-left: 8px; }
+        .nav-dock { position: absolute; bottom: 35px; left: 50%; margin-left: -270px; width: 540px; display: block; } .nav-item { background: rgba(0,0,0,0.7); border: 1px solid rgba(212,175,90,0.15); border-radius: 14px; height: 64px; width: 170px; display: inline-block; margin-right: 10px; text-align: center; line-height: 62px; font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #8A8070; letter-spacing: 2px; cursor: pointer; } .nav-item.last { margin-right: 0; } .nav-item.active { border-color: rgba(212,175,90,0.6); color: #D4AF5A; background: rgba(212,175,90,0.15); }
         .panel-right { right: 0; top: 0; width: 480px; display: block; }
-
-        .weather-board {
-            position: absolute; top: 80px; left: 35px; width: 410px;
-            background: rgba(10,8,5,0.4); border-radius: 18px; border: 1px solid rgba(212,175,90,0.1); padding: 28px 30px;
-        }
-        .w-loc { font-family: 'Rajdhani', sans-serif; font-size: 11px; color: #D4AF5A; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; }
-        .w-main { display: table; width: 100%; margin: 18px 0 22px; }
-        .w-main-left { display: table-cell; vertical-align: bottom; }
-        .w-main-right { display: table-cell; vertical-align: bottom; text-align: right; }
-        .w-temp { font-family: 'Teko', sans-serif; font-size: 96px; line-height: 0.8; font-weight: 500; color: #F0EDE8; }
-        .w-temp sup { font-size: 36px; vertical-align: top; }
-        .w-desc { font-size: 14px; font-weight: 600; color: #C0B898; margin-top: 10px; letter-spacing: 2px; text-transform: uppercase; }
-        .w-icon { font-size: 70px; line-height: 1; }
-        
-        .w-details { border-top: 1px solid rgba(212,175,90,0.1); padding-top: 20px; }
-        .w-det-item { display: inline-block; width: 49%; margin-bottom: 15px; font-size: 14px; vertical-align: top; }
-        .w-det-icon { display: inline-block; font-size: 18px; width: 25px; text-align: center; }
-        .w-det-text { display: inline-block; }
-        .w-det-val { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #F0EDE8; line-height: 1; }
-        .w-det-lbl { font-size: 10px; color: #8A8070; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
-
-        /* Borsa */
-        .finance-section { position: absolute; bottom: 30px; left: 35px; width: 410px; }
-        .fin-header { border-bottom: 1px solid rgba(212,175,90,0.15); padding-bottom: 14px; margin-bottom: 16px; }
-
-        .fin-card {
-            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px;
-            border-left: 4px solid #555;
-        }
-        .fin-card.up { border-left-color: #4ADE80; }
-        .fin-card.down { border-left-color: #F87171; }
-        
-        .fin-table { display: table; width: 100%; }
-        .fin-t-left { display: table-cell; vertical-align: middle; }
-        .fin-t-right { display: table-cell; vertical-align: middle; text-align: right; }
-
-        .fin-flex-left { display: table; }
-        .fin-icon { display: table-cell; font-size: 22px; font-weight: 900; color: #D4AF5A; width: 32px; font-family: 'Teko', sans-serif; vertical-align: middle; }
-        .fin-text-block { display: table-cell; vertical-align: middle; }
-
-        .fin-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #F0EDE8; }
-        .fin-subname { font-size: 10px; color: #8A8070; letter-spacing: 1px; margin-top: 2px; }
-
-        .fin-price { font-family: 'Teko', sans-serif; font-size: 34px; font-weight: 500; line-height: 1; color: #F0EDE8; }
-        .fin-tl { font-size: 13px; font-weight: 600; color: #8A8070; margin-left: 3px; }
-        .fin-change { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; margin-top: 4px; }
-        .fin-change.up { color: #4ADE80; }
-        .fin-change.down { color: #F87171; }
-        .fin-updated { font-size: 10px; color: #8A8070; letter-spacing: 2px; text-align: right; margin-top: 8px; }
-
-        /* ─── TV MOD DURUM STİLLERİ (VIEW MODES) ─── */
-        body.view-radio .home-content { display: none; }
-        body.view-radio .radio-content { display: block; }
-        body.view-radio .panel-left { width: 500px; }
-
-        body.view-zen .panel-left { display: none; }
-        body.view-zen .panel-right { display: none; }
-        body.view-zen .nav-dock { opacity: 0.05; }
-        body.view-zen .nav-dock:hover { opacity: 1; }
+        .weather-board { position: absolute; top: 80px; left: 35px; width: 410px; background: rgba(10,8,5,0.4); border-radius: 18px; border: 1px solid rgba(212,175,90,0.1); padding: 28px 30px; } .w-loc { font-family: 'Rajdhani', sans-serif; font-size: 11px; color: #D4AF5A; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; } .w-main { display: table; width: 100%; margin: 18px 0 22px; } .w-main-left { display: table-cell; vertical-align: bottom; } .w-main-right { display: table-cell; vertical-align: bottom; text-align: right; } .w-temp { font-family: 'Teko', sans-serif; font-size: 96px; line-height: 0.8; font-weight: 500; color: #F0EDE8; } .w-temp sup { font-size: 36px; vertical-align: top; } .w-desc { font-size: 14px; font-weight: 600; color: #C0B898; margin-top: 10px; letter-spacing: 2px; text-transform: uppercase; } .w-icon { font-size: 70px; line-height: 1; }
+        .w-details { border-top: 1px solid rgba(212,175,90,0.1); padding-top: 20px; } .w-det-item { display: inline-block; width: 49%; margin-bottom: 15px; font-size: 14px; vertical-align: top; } .w-det-icon { display: inline-block; font-size: 18px; width: 25px; text-align: center; } .w-det-text { display: inline-block; } .w-det-val { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #F0EDE8; line-height: 1; } .w-det-lbl { font-size: 10px; color: #8A8070; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+        .finance-section { position: absolute; bottom: 30px; left: 35px; width: 410px; } .fin-header { border-bottom: 1px solid rgba(212,175,90,0.15); padding-bottom: 14px; margin-bottom: 16px; }
+        .fin-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px; border-left: 4px solid #555; } .fin-card.up { border-left-color: #4ADE80; } .fin-card.down { border-left-color: #F87171; }
+        .fin-table { display: table; width: 100%; } .fin-t-left { display: table-cell; vertical-align: middle; } .fin-t-right { display: table-cell; vertical-align: middle; text-align: right; }
+        .fin-flex-left { display: table; } .fin-icon { display: table-cell; font-size: 22px; font-weight: 900; color: #D4AF5A; width: 32px; font-family: 'Teko', sans-serif; vertical-align: middle; } .fin-text-block { display: table-cell; vertical-align: middle; }
+        .fin-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #F0EDE8; } .fin-subname { font-size: 10px; color: #8A8070; letter-spacing: 1px; margin-top: 2px; }
+        .fin-price { font-family: 'Teko', sans-serif; font-size: 34px; font-weight: 500; line-height: 1; color: #F0EDE8; } .fin-tl { font-size: 13px; font-weight: 600; color: #8A8070; margin-left: 3px; } .fin-change { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; margin-top: 4px; } .fin-change.up { color: #4ADE80; } .fin-change.down { color: #F87171; } .fin-updated { font-size: 10px; color: #8A8070; letter-spacing: 2px; text-align: right; margin-top: 8px; }
+        body.view-radio .home-content { display: none; } body.view-radio .radio-content { display: block; } body.view-radio .panel-left { width: 500px; }
+        body.view-zen .panel-left { display: none; } body.view-zen .panel-right { display: none; } body.view-zen .nav-dock { opacity: 0.05; } body.view-zen .nav-dock:hover { opacity: 1; }
     </style>
 </head>
 <body class="view-home" id="body-root">
 
-<!-- ESKİ TV'LERDE MEMORY LEAK (BELLEK SIZINTISI) OLMAMASI İÇİN FİZİKSEL SES ETİKETİ EKLENDİ -->
 <audio id="radio-player" style="display:none;" preload="none"></audio>
 
 <div id="bg-engine">
-    <video id="bg-video" src="main.mp4" autoplay loop muted playsinline poster="poster.jpeg"></video>
+    <video id="bg-video" src="main.mp4" autoplay loop muted playsinline></video>
     <div id="bg-poster"></div>
 </div>
 <div class="bg-overlay"></div>
@@ -281,16 +122,13 @@
 <div id="fs-btn" onclick="AppOS.toggleFullScreen()" title="Tam Ekran">⛶</div>
 
 <div class="header-brand" id="brand-area">
-    <img src="http://burotarz.com/BUROTARZ/assets/img/logo/logo.png" alt="Bürotarz" 
-         onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block'">
+    <img src="http://burotarz.com/BUROTARZ/assets/img/logo/logo.png" alt="Bürotarz" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block'">
     <div id="logo-fallback" style="display:none; font-family:'Cinzel',serif; font-size:34px; letter-spacing:18px; font-weight:900; color:#fff;">BÜROTARZ</div>
     <div class="brand-sub">Executive Wall OS</div>
 </div>
 
 <div id="app-core">
-
     <div class="glass-panel panel-left" id="panel-left-dom">
-        
         <div class="home-content" id="home-content-dom">
             <div class="module-header mh-cal">
                 <div class="module-title"><span class="accent">📅</span> AJANDA & TARİH</div>
@@ -325,7 +163,6 @@
                 <div class="module-title"><span class="accent">📻</span> RADYO İSTASYONLARI</div>
             </div>
             <div class="radio-list-wrapper">
-                
                 <div class="radio-list-item" id="radyo-item-1" onclick="AppOS.playRadio(1, 'https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM_SC')">
                     <div class="r-table">
                         <div class="r-cell-icon">🎧</div>
@@ -336,7 +173,6 @@
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-1">▶</span></div></div>
                     </div>
                 </div>
-
                 <div class="radio-list-item" id="radyo-item-2" onclick="AppOS.playRadio(2, 'https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC')">
                     <div class="r-table">
                         <div class="r-cell-icon">🎵</div>
@@ -347,7 +183,6 @@
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-2">▶</span></div></div>
                     </div>
                 </div>
-
                 <div class="radio-list-item" id="radyo-item-3" onclick="AppOS.playRadio(3, 'https://playerservices.streamtheworld.com/api/livestream-redirect/METRO_FM_SC')">
                     <div class="r-table">
                         <div class="r-cell-icon">🎸</div>
@@ -358,10 +193,8 @@
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-3">▶</span></div></div>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 
     <div class="panel-center">
@@ -381,11 +214,9 @@
                 </div>
             </div>
         </div>
-
         <div class="digital-clock-box">
             <span id="digi-h">00</span><span class="digi-blink">:</span><span id="digi-m">00</span><span class="digi-sec" id="digi-s">00</span>
         </div>
-
         <div class="nav-dock">
             <div class="nav-item active" id="nav-home" onclick="AppOS.switchView('home')">🏠 ANA SAYFA</div>
             <div class="nav-item" id="nav-radio" onclick="AppOS.switchView('radio')">📻 RADYO</div>
@@ -411,94 +242,58 @@
             <div class="w-details">
                 <div class="w-det-item">
                     <div class="w-det-icon">🌡️</div>
-                    <div class="w-det-text">
-                        <div class="w-det-val" id="w-feel">--°</div>
-                        <div class="w-det-lbl">Hissedilen</div>
-                    </div>
+                    <div class="w-det-text"><div class="w-det-val" id="w-feel">--°</div><div class="w-det-lbl">Hissedilen</div></div>
                 </div>
                 <div class="w-det-item">
                     <div class="w-det-icon">💧</div>
-                    <div class="w-det-text">
-                        <div class="w-det-val" id="w-hum">--%</div>
-                        <div class="w-det-lbl">Nem</div>
-                    </div>
+                    <div class="w-det-text"><div class="w-det-val" id="w-hum">--%</div><div class="w-det-lbl">Nem</div></div>
                 </div>
                 <div class="w-det-item">
                     <div class="w-det-icon">💨</div>
-                    <div class="w-det-text">
-                        <div class="w-det-val" id="w-wind">--</div>
-                        <div class="w-det-lbl">Rüzgar km/h</div>
-                    </div>
+                    <div class="w-det-text"><div class="w-det-val" id="w-wind">--</div><div class="w-det-lbl">Rüzgar km/h</div></div>
                 </div>
                 <div class="w-det-item">
                     <div class="w-det-icon">⏱️</div>
-                    <div class="w-det-text">
-                        <div class="w-det-val" id="w-pres">--</div>
-                        <div class="w-det-lbl">Basınç hPa</div>
-                    </div>
+                    <div class="w-det-text"><div class="w-det-val" id="w-pres">--</div><div class="w-det-lbl">Basınç hPa</div></div>
                 </div>
             </div>
         </div>
 
         <div class="finance-section">
-            <div class="fin-header">
-                <div class="module-title"><div class="live-dot green"></div> CANLI PİYASA</div>
-            </div>
-
+            <div class="fin-header"><div class="module-title"><div class="live-dot green"></div> CANLI PİYASA</div></div>
             <div class="fin-card" id="fin-usd">
                 <div class="fin-table">
                     <div class="fin-t-left">
                         <div class="fin-flex-left">
                             <div class="fin-icon">$</div>
-                            <div class="fin-text-block">
-                                <div class="fin-name">DOLAR</div>
-                                <div class="fin-subname">USD / TRY</div>
-                            </div>
+                            <div class="fin-text-block"><div class="fin-name">DOLAR</div><div class="fin-subname">USD / TRY</div></div>
                         </div>
                     </div>
-                    <div class="fin-t-right">
-                        <div class="fin-price"><span id="val-usd">--</span><span class="fin-tl">₺</span></div>
-                        <div class="fin-change" id="chg-usd">--</div>
-                    </div>
+                    <div class="fin-t-right"><div class="fin-price"><span id="val-usd">--</span><span class="fin-tl">₺</span></div><div class="fin-change" id="chg-usd">--</div></div>
                 </div>
             </div>
-
             <div class="fin-card" id="fin-eur">
                 <div class="fin-table">
                     <div class="fin-t-left">
                         <div class="fin-flex-left">
                             <div class="fin-icon">€</div>
-                            <div class="fin-text-block">
-                                <div class="fin-name">EURO</div>
-                                <div class="fin-subname">EUR / TRY</div>
-                            </div>
+                            <div class="fin-text-block"><div class="fin-name">EURO</div><div class="fin-subname">EUR / TRY</div></div>
                         </div>
                     </div>
-                    <div class="fin-t-right">
-                        <div class="fin-price"><span id="val-eur">--</span><span class="fin-tl">₺</span></div>
-                        <div class="fin-change" id="chg-eur">--</div>
-                    </div>
+                    <div class="fin-t-right"><div class="fin-price"><span id="val-eur">--</span><span class="fin-tl">₺</span></div><div class="fin-change" id="chg-eur">--</div></div>
                 </div>
             </div>
-
             <div class="fin-card" id="fin-gold">
                 <div class="fin-table">
                     <div class="fin-t-left">
                         <div class="fin-flex-left">
                             <div class="fin-icon">Au</div>
-                            <div class="fin-text-block">
-                                <div class="fin-name">GRAM ALTIN</div>
-                                <div class="fin-subname">XAU TRY</div>
-                            </div>
+                            <div class="fin-text-block"><div class="fin-name">GRAM ALTIN</div><div class="fin-subname">XAU TRY</div></div>
                         </div>
                     </div>
-                    <div class="fin-t-right">
-                        <div class="fin-price"><span id="val-gold">--</span><span class="fin-tl">₺</span></div>
-                        <div class="fin-change" id="chg-gold">--</div>
-                    </div>
+                    <div class="fin-t-right"><div class="fin-price"><span id="val-gold">--</span><span class="fin-tl">₺</span></div><div class="fin-change" id="chg-gold">--</div></div>
                 </div>
             </div>
-
             <div class="fin-updated" id="fin-updated"></div>
         </div>
     </div>
@@ -510,26 +305,22 @@
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
 function ajax(url, cb) {
-    var x = new XMLHttpRequest();
-    x.open('GET', url, true);
-    x.timeout = 10000;
+    var x = new XMLHttpRequest(); x.open('GET', url, true); x.timeout = 10000;
     x.onreadystatechange = function() {
         if (x.readyState !== 4) return;
-        if (x.status === 200) {
-            try { cb(null, JSON.parse(x.responseText)); }
-            catch(e) { cb(e, null); }
-        } else { cb('HTTP ' + x.status, null); }
+        if (x.status === 200) { try { cb(null, JSON.parse(x.responseText)); } catch(e) { cb(e, null); } } else { cb('HTTP ' + x.status, null); }
     };
-    x.ontimeout = function() { cb('timeout', null); };
-    x.send();
+    x.ontimeout = function() { cb('timeout', null); }; x.send();
 }
 
 var AppOS = {
     currentRadioId: null,
-    isVideoPlaying: true,
 
     init: function() {
-        this.handleScaling();
+        // Ekranın hazır olmasını bekle ve öyle ölçeklendir (TV bug çözümü)
+        var self = this;
+        setTimeout(function() { self.handleScaling(); }, 500);
+        
         this.initVideo(); 
         this.buildClockFace();
         this.runClock();
@@ -538,18 +329,15 @@ var AppOS = {
         this.initFinance();
         this.initNews();
         
-        var self = this;
         setInterval(function() { self.updateCalendar(); }, 60000);
         window.addEventListener('resize', function() { self.handleScaling(); });
     },
     
     switchView: function(viewName) {
         document.getElementById('body-root').className = 'view-' + viewName;
-        
         document.getElementById('nav-home').className = 'nav-item';
         document.getElementById('nav-radio').className = 'nav-item';
         document.getElementById('nav-zen').className = 'nav-item last';
-        
         var activeNav = document.getElementById('nav-' + viewName);
         if(viewName === 'zen') {
             activeNav.className = 'nav-item last active';
@@ -563,33 +351,25 @@ var AppOS = {
     initVideo: function() {
         var vid = document.getElementById('bg-video');
         if (vid) {
-            try {
-                vid.playbackRate = 0.6; 
-                vid.muted = true; 
-                vid.defaultMuted = true;
-                
-                setInterval(function() { 
-                    if (AppOS.isVideoPlaying && vid.paused) { 
-                        vid.play().catch(function(e){}); 
-                    } 
-                }, 2000);
-                
-                vid.addEventListener('ended', function() { 
-                    vid.currentTime = 0; 
-                    vid.play().catch(function(e){}); 
-                }, false);
-            } catch(e) {
-                this.handleVideoError();
-            }
+            vid.playbackRate = 0.6; 
+            vid.muted = true; 
+            vid.defaultMuted = true;
+            vid.addEventListener('ended', function() { vid.currentTime = 0; vid.play().catch(function(e){}); }, false);
         }
     },
 
-    handleVideoError: function() {
-        this.isVideoPlaying = false;
+    // Arayüz Arka Plan Değiştirici (Video <-> Poster geçişini kesin yapar)
+    toggleBackgroundMode: function(mode) {
         var vid = document.getElementById('bg-video');
         var poster = document.getElementById('bg-poster');
-        if(vid) vid.style.display = 'none';
-        if(poster) poster.style.display = 'block'; 
+        
+        if(mode === 'poster') {
+            if(vid) { vid.pause(); vid.style.display = 'none'; }
+            if(poster) poster.style.display = 'block';
+        } else {
+            if(poster) poster.style.display = 'none';
+            if(vid) { vid.style.display = 'block'; vid.play().catch(function(e){}); }
+        }
     },
 
     toggleFullScreen: function() {
@@ -603,57 +383,57 @@ var AppOS = {
     playRadio: function(id, streamUrl) {
         var player = document.getElementById('radio-player');
         
+        // Önce her şeyi sıfırla
         for(var i=1; i<=3; i++) {
             document.getElementById('play-btn-' + i).innerText = '▶';
             document.getElementById('live-dot-' + i).style.display = 'none';
             document.getElementById('radyo-item-' + i).className = 'radio-list-item';
         }
 
-        if (this.currentRadioId === id && !player.paused) {
+        // Kapatma işlemi
+        if (this.currentRadioId === id) {
             player.pause();
             player.removeAttribute('src'); 
             player.load();
             this.currentRadioId = null;
-            
-            var vid = document.getElementById('bg-video');
-            if(vid && this.isVideoPlaying) vid.play().catch(function(e){});
+            this.toggleBackgroundMode('video'); // Video geri gelsin
             return;
         }
 
+        // Açma işlemi
         player.pause();
-        var cacheBusterUrl = streamUrl + "?t=" + new Date().getTime();
-        player.src = cacheBusterUrl;
+        // TV'lerde 302 yönlendirmesi sorun yaratabilir, o yüzden cache engellemeyi (time param) kaldırdım
+        player.src = streamUrl; 
+        
+        // Eski TV'ler için senkronize zorlama
+        player.load(); 
         
         var btn = document.getElementById('play-btn-' + id);
         var dot = document.getElementById('live-dot-' + id);
         var item = document.getElementById('radyo-item-' + id);
 
-        btn.innerText = '⏳'; 
-        item.className = 'radio-list-item active';
         this.currentRadioId = id;
+        item.className = 'radio-list-item active';
+        
+        // TV'nin ses API'sini beklemeden UI'yi anında açık göster (Çünkü TV'de Promise dönmez)
+        btn.innerText = '⏸';
+        dot.style.display = 'inline-block';
+        
+        // Arka planı anında Postere çevir (Siyah ekran kalmasın)
+        this.toggleBackgroundMode('poster');
 
         var playPromise = player.play();
-
         if (playPromise !== undefined) {
-            playPromise.then(function() {
-                btn.innerText = '⏸';
-                dot.style.display = 'inline-block';
-            }).catch(function(error) {
+            playPromise.catch(function(error) {
+                // Eğer hata verdiyse (Örn: TV linki engellediyse) uyarı olarak butonu geri döndür
+                console.error("Play hatası:", error);
                 btn.innerText = '▶';
                 item.className = 'radio-list-item';
+                dot.style.display = 'none';
                 AppOS.currentRadioId = null;
+                AppOS.toggleBackgroundMode('video');
             });
-        } else {
-            btn.innerText = '⏸';
-            dot.style.display = 'inline-block';
         }
-
-        setTimeout(function() {
-            var v = document.getElementById('bg-video');
-            if (v && v.paused && AppOS.currentRadioId !== null) {
-                AppOS.handleVideoError();
-            }
-        }, 1500);
     },
 
     handleScaling: function() {
@@ -669,29 +449,22 @@ var AppOS = {
             var isHour = (i % 5 === 0);
             var el = document.createElement('div');
             el.className = 'c-marker';
-            var w = isHour ? 5 : 1.5;
-            var h = isHour ? 28 : 10;
-            var r = 212;
+            var w = isHour ? 5 : 1.5; var h = isHour ? 28 : 10; var r = 212;
             var angle = (i * 6 - 90) * (Math.PI / 180);
-            var x = r * Math.cos(angle) - w / 2;
-            var y = r * Math.sin(angle) - h / 2;
-            el.style.width = w + 'px'; el.style.height = h + 'px';
-            el.style.background = isHour ? '#1a1208' : '#6a5a40';
+            var x = r * Math.cos(angle) - w / 2; var y = r * Math.sin(angle) - h / 2;
+            el.style.width = w + 'px'; el.style.height = h + 'px'; el.style.background = isHour ? '#1a1208' : '#6a5a40';
             el.style.webkitTransform = 'translate(' + x + 'px,' + y + 'px) rotate(' + (i * 6) + 'deg)';
             el.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + (i * 6) + 'deg)';
             el.style.borderRadius = '2px';
             container.appendChild(el);
         }
-
         var romCont = document.getElementById('roman-nums');
         var romans = ['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI'];
         for (var j = 0; j < 12; j++) {
             var rEl = document.createElement('div');
             rEl.className = 'rom-num';
-            var a = (j * 30 - 90) * (Math.PI / 180);
-            var radius = 185;
-            var rx = 227 + radius * Math.cos(a);
-            var ry = 227 + radius * Math.sin(a);
+            var a = (j * 30 - 90) * (Math.PI / 180); var radius = 185;
+            var rx = 227 + radius * Math.cos(a); var ry = 227 + radius * Math.sin(a);
             rEl.style.left = rx + 'px'; rEl.style.top = ry + 'px';
             rEl.style.webkitTransform = 'translate(-50%,-50%)'; rEl.style.transform = 'translate(-50%,-50%)';
             rEl.innerText = romans[j];
@@ -711,10 +484,7 @@ var AppOS = {
             sh.style.webkitTransform = 'rotateZ(' + sDeg + 'deg)'; mh.style.webkitTransform = 'rotateZ(' + mDeg + 'deg)'; hh.style.webkitTransform = 'rotateZ(' + hDeg + 'deg)';
             sh.style.transform = 'rotateZ(' + sDeg + 'deg)'; mh.style.transform = 'rotateZ(' + mDeg + 'deg)'; hh.style.transform = 'rotateZ(' + hDeg + 'deg)';
 
-            if (s !== lastS) {
-                lastS = s;
-                dH.innerText = pad(h); dM.innerText = pad(m); dS.innerText = pad(s);
-            }
+            if (s !== lastS) { lastS = s; dH.innerText = pad(h); dM.innerText = pad(m); dS.innerText = pad(s); }
             window.requestAnimationFrame(tick);
         };
         window.requestAnimationFrame(tick);
