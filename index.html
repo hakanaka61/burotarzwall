@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1920, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>Bürotarz - Executive Wall OS (Universal TV Edition V4)</title>
+    <title>Bürotarz - Executive Wall OS (Universal Edition V5)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,8 +17,8 @@
             font-family: 'Montserrat', sans-serif;
             color: #F0EDE8;
             overflow: hidden;
-            width: 1920px;
-            height: 1080px;
+            width: 100vw;
+            height: 100vh;
             position: relative;
         }
 
@@ -32,16 +32,15 @@
             display: block; opacity: 1;
             -webkit-filter: brightness(0.55) contrast(1.1); filter: brightness(0.55) contrast(1.1);
         }
-        /* Görsel arka plan */
         #bg-poster {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('poster.jpeg'); 
             background-size: cover; 
             background-position: center;
             background-repeat: no-repeat;
-            display: none; /* Başlangıçta gizli */
+            display: none; 
             opacity: 0.6;
-            z-index: 2; /* Videonun üstüne çıkmasını garanti eder */
+            z-index: 2; 
         }
 
         .bg-overlay {
@@ -53,10 +52,16 @@
             background: linear-gradient(90deg, transparent, #D4AF5A, transparent);
         }
 
-        /* ─── ANA KAFES ─── */
+        /* ─── ANA KAFES (HİZALAMA SORUNU FİXLENDİ) ─── */
         #app-core {
-            position: absolute; width: 1880px; height: 960px; left: 50%; top: 50%;
-            margin-left: -940px; margin-top: -480px; z-index: 10;
+            position: absolute; 
+            width: 1880px; 
+            height: 960px; 
+            left: 50%; 
+            top: 50%;
+            /* Margin değerleri kaldırıldı, yerine translate(-50%, -50%) JS ile veriliyor */
+            transform-origin: center center;
+            z-index: 10;
         }
 
         #fs-btn {
@@ -166,6 +171,7 @@
             </div>
             <div class="radio-list-wrapper">
                 
+                <!-- Orijinal 3 Radyo Korundu -->
                 <div class="radio-list-item" id="radyo-item-1" onclick="AppOS.playRadio(1, 'https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM_SC')">
                     <div class="r-table">
                         <div class="r-cell-icon">🎧</div>
@@ -199,35 +205,35 @@
                     </div>
                 </div>
 
-                <!-- YENİ EKLENEN RADYOLAR -->
-                <div class="radio-list-item" id="radyo-item-4" onclick="AppOS.playRadio(4, 'https://playerservices.streamtheworld.com/api/livestream-redirect/VIRGIN_RADIO_SC')">
+                <!-- İstenen Türkçe Radyolar -->
+                <div class="radio-list-item" id="radyo-item-4" onclick="AppOS.playRadio(4, 'https://canliyayin.radyo7.com/radyo7/128/icecast.audio')">
                     <div class="r-table">
-                        <div class="r-cell-icon">🔥</div>
+                        <div class="r-cell-icon">📻</div>
                         <div class="r-cell-info">
-                            <div class="r-title">VIRGIN RADIO</div>
-                            <div class="r-sub"><div class="live-dot green" id="live-dot-4" style="display:none;"></div> Yabancı Hit / Pop</div>
+                            <div class="r-title">RADYO 7</div>
+                            <div class="r-sub"><div class="live-dot green" id="live-dot-4" style="display:none;"></div> Türkçe Slow / Karışık</div>
                         </div>
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-4">▶</span></div></div>
                     </div>
                 </div>
 
-                <div class="radio-list-item" id="radyo-item-5" onclick="AppOS.playRadio(5, 'https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_FM_SC')">
+                <div class="radio-list-item" id="radyo-item-5" onclick="AppOS.playRadio(5, 'https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio')">
                     <div class="r-table">
-                        <div class="r-cell-icon">🎷</div>
+                        <div class="r-cell-icon">🔥</div>
                         <div class="r-cell-info">
-                            <div class="r-title">JOY FM</div>
-                            <div class="r-sub"><div class="live-dot green" id="live-dot-5" style="display:none;"></div> Yabancı Slow / Klasik</div>
+                            <div class="r-title">POWER TÜRK</div>
+                            <div class="r-sub"><div class="live-dot green" id="live-dot-5" style="display:none;"></div> Türkçe Pop Hit</div>
                         </div>
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-5">▶</span></div></div>
                     </div>
                 </div>
 
-                <div class="radio-list-item" id="radyo-item-6" onclick="AppOS.playRadio(6, 'https://listen.radyofenomen.com/fenomen/128/icecast.audio')">
+                <div class="radio-list-item" id="radyo-item-6" onclick="AppOS.playRadio(6, 'https://turkmedya.radyotvonline.net/alemfm')">
                     <div class="r-table">
-                        <div class="r-cell-icon">📻</div>
+                        <div class="r-cell-icon">🎙️</div>
                         <div class="r-cell-info">
-                            <div class="r-title">RADYO FENOMEN</div>
-                            <div class="r-sub"><div class="live-dot green" id="live-dot-6" style="display:none;"></div> Güncel Pop / Hit</div>
+                            <div class="r-title">ALEM FM</div>
+                            <div class="r-sub"><div class="live-dot green" id="live-dot-6" style="display:none;"></div> Türkçe Karma</div>
                         </div>
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-6">▶</span></div></div>
                     </div>
@@ -355,7 +361,7 @@ function ajax(url, cb) {
 
 var AppOS = {
     currentRadioId: null,
-    totalRadios: 6, // Yeni eklenen radyolarla birlikte sayıyı güncelledik
+    totalRadios: 6, 
 
     init: function() {
         var self = this;
@@ -395,12 +401,9 @@ var AppOS = {
             vid.muted = true; 
             vid.defaultMuted = true;
             
-            // Oynatmayı güvenli şekilde tetikleme (Modern Browser/Tizen Uyumlu)
             var playPromise = vid.play();
             if (playPromise !== undefined) {
                 playPromise.catch(function(e) {
-                    // Cihaz video otomatik oynatmayı engelliyorsa fallback olarak poster göster
-                    console.log("Video otomatik oynatılamadı, poster moduna geçiliyor.", e);
                     AppOS.toggleBackgroundMode('poster');
                 });
             }
@@ -410,7 +413,6 @@ var AppOS = {
                 vid.play().catch(function(e){}); 
             }, false);
             
-            // Videoda hata oluşursa (kodek hatası vb.) yine poster moduna geç
             vid.addEventListener('error', function() {
                 AppOS.toggleBackgroundMode('poster');
             }, true);
@@ -445,7 +447,6 @@ var AppOS = {
     playRadio: function(id, streamUrl) {
         var player = document.getElementById('radio-player');
         
-        // Dinamik olarak tüm radyo arayüzlerini sıfırla
         for(var i = 1; i <= this.totalRadios; i++) {
             var btnItem = document.getElementById('play-btn-' + i);
             var dotItem = document.getElementById('live-dot-' + i);
@@ -456,7 +457,6 @@ var AppOS = {
             if(listItem) listItem.className = 'radio-list-item';
         }
 
-        // Kapatma işlemi
         if (this.currentRadioId === id) {
             player.pause();
             player.removeAttribute('src'); 
@@ -466,7 +466,6 @@ var AppOS = {
             return;
         }
 
-        // Açma işlemi
         player.pause();
         player.src = streamUrl; 
         player.load(); 
@@ -486,7 +485,6 @@ var AppOS = {
         var playPromise = player.play();
         if (playPromise !== undefined) {
             playPromise.catch(function(error) {
-                console.error("Play hatası:", error);
                 if(btn) btn.innerText = '▶';
                 if(item) item.className = 'radio-list-item';
                 if(dot) dot.style.display = 'none';
@@ -496,11 +494,15 @@ var AppOS = {
         }
     },
 
+    // KESİN HİZALAMA ÇÖZÜMÜ BURADA YAPILDI
     handleScaling: function() {
         var el = document.getElementById('app-core');
         var s  = Math.min(window.innerWidth / 1920, window.innerHeight / 1080) * 0.97;
-        el.style.webkitTransform = 'scale(' + s + ')';
-        el.style.transform = 'scale(' + s + ')';
+        
+        // CSS margin hatasından kurtulmak için pozisyonu ve boyutu "translate" ve "scale" ile birlikte veriyoruz.
+        // Bu sayede tarayıcı ne kadar bozuk çözünürlüğe sahip olursa olsun tam ortalama yapacaktır.
+        el.style.webkitTransform = 'translate(-50%, -50%) scale(' + s + ')';
+        el.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
     },
 
     buildClockFace: function() {
