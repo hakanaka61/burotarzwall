@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1920, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>Bürotarz - Executive Wall OS (Universal TV Edition V3)</title>
+    <title>Bürotarz - Executive Wall OS (Universal TV Edition V4)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,10 +26,9 @@
         #bg-engine { 
             position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; background: #000; overflow: hidden;
         }
-        /* Kare sorununu çözen basit konumlandırma */
         #bg-video {
             position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
+            width: 100%; height: 100%; object-fit: cover;
             display: block; opacity: 1;
             -webkit-filter: brightness(0.55) contrast(1.1); filter: brightness(0.55) contrast(1.1);
         }
@@ -60,7 +59,6 @@
             margin-left: -940px; margin-top: -480px; z-index: 10;
         }
 
-        /* Diğer arayüz stilleri aynen korunmuştur */
         #fs-btn {
             position: absolute; top: 24px; right: 24px; z-index: 999;
             width: 44px; height: 44px; background: rgba(0,0,0,0.6); border: 1px solid rgba(212,175,90,0.3);
@@ -86,7 +84,9 @@
         .cal-day-num { font-family: 'Teko', sans-serif; font-size: 100px; line-height: 0.85; font-weight: 500; color: #D4AF5A; } .cal-day-name { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; color: #8A8070; letter-spacing: 5px; margin-top: 10px; } .cal-month { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; color: #F0EDE8; letter-spacing: 3px; line-height: 1.2; } .cal-year { font-family: 'Teko', sans-serif; font-size: 36px; color: #8A8070; letter-spacing: 2px; }
         .cal-week-row { position: absolute; top: 282px; left: 35px; width: 410px; } .cal-wday { display: inline-block; width: 52px; text-align: center; padding: 8px 0; font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700; color: #8A8070; background: rgba(255,255,255,0.04); border-radius: 8px; margin-right: 5px; } .cal-wday.today { color: #D4AF5A; background: rgba(212,175,90,0.15); border: 1px solid rgba(212,175,90,0.3); }
         .news-wrapper { position: absolute; top: 430px; left: 35px; width: 410px; height: 495px; overflow: hidden; } .news-card { background: rgba(255,255,255,0.03); border-left: 3px solid #9A7C35; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; position: relative; } .news-source { font-size: 10px; letter-spacing: 3px; color: #D4AF5A; font-weight: 700; margin-bottom: 8px; display: block; } .news-headline { font-size: 13.5px; line-height: 1.55; font-weight: 500; color: #F0EDE8; display: block; } .news-time { font-size: 11px; color: #8A8070; position: absolute; top: 18px; right: 18px; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
-        .radio-list-wrapper { position: absolute; top: 80px; left: 35px; width: calc(100% - 70px); height: 850px; overflow-y: auto; }
+        .radio-list-wrapper { position: absolute; top: 80px; left: 35px; width: calc(100% - 70px); height: 850px; overflow-y: auto; padding-right: 10px; }
+        .radio-list-wrapper::-webkit-scrollbar { width: 6px; }
+        .radio-list-wrapper::-webkit-scrollbar-thumb { background: rgba(212,175,90,0.4); border-radius: 10px; }
         .radio-list-item { background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,90,0.15); border-radius: 14px; padding: 20px; margin-bottom: 15px; display: block; position: relative; cursor: pointer; } .radio-list-item.active { border-color: rgba(212,175,90,0.7); background: rgba(212,175,90,0.08); }
         .r-table { display: table; width: 100%; } .r-cell-icon { display: table-cell; width: 50px; font-size: 32px; vertical-align: middle; color: #D4AF5A; } .r-cell-info { display: table-cell; vertical-align: middle; } .r-cell-ctrl { display: table-cell; width: 50px; text-align: right; vertical-align: middle; }
         .r-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #F0EDE8; letter-spacing: 1px; } .r-sub { font-size: 13px; color: #8A8070; margin-top: 5px; text-transform: uppercase; }
@@ -114,7 +114,9 @@
 <audio id="radio-player" style="display:none;" preload="none"></audio>
 
 <div id="bg-engine">
-    <video id="bg-video" src="main.mp4" autoplay loop muted playsinline></video>
+    <video id="bg-video" autoplay loop muted playsinline webkit-playsinline>
+        <source src="main.mp4" type="video/mp4">
+    </video>
     <div id="bg-poster"></div>
 </div>
 <div class="bg-overlay"></div>
@@ -163,6 +165,7 @@
                 <div class="module-title"><span class="accent">📻</span> RADYO İSTASYONLARI</div>
             </div>
             <div class="radio-list-wrapper">
+                
                 <div class="radio-list-item" id="radyo-item-1" onclick="AppOS.playRadio(1, 'https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM_SC')">
                     <div class="r-table">
                         <div class="r-cell-icon">🎧</div>
@@ -173,6 +176,7 @@
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-1">▶</span></div></div>
                     </div>
                 </div>
+                
                 <div class="radio-list-item" id="radyo-item-2" onclick="AppOS.playRadio(2, 'https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC')">
                     <div class="r-table">
                         <div class="r-cell-icon">🎵</div>
@@ -183,6 +187,7 @@
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-2">▶</span></div></div>
                     </div>
                 </div>
+                
                 <div class="radio-list-item" id="radyo-item-3" onclick="AppOS.playRadio(3, 'https://playerservices.streamtheworld.com/api/livestream-redirect/METRO_FM_SC')">
                     <div class="r-table">
                         <div class="r-cell-icon">🎸</div>
@@ -193,6 +198,41 @@
                         <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-3">▶</span></div></div>
                     </div>
                 </div>
+
+                <!-- YENİ EKLENEN RADYOLAR -->
+                <div class="radio-list-item" id="radyo-item-4" onclick="AppOS.playRadio(4, 'https://playerservices.streamtheworld.com/api/livestream-redirect/VIRGIN_RADIO_SC')">
+                    <div class="r-table">
+                        <div class="r-cell-icon">🔥</div>
+                        <div class="r-cell-info">
+                            <div class="r-title">VIRGIN RADIO</div>
+                            <div class="r-sub"><div class="live-dot green" id="live-dot-4" style="display:none;"></div> Yabancı Hit / Pop</div>
+                        </div>
+                        <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-4">▶</span></div></div>
+                    </div>
+                </div>
+
+                <div class="radio-list-item" id="radyo-item-5" onclick="AppOS.playRadio(5, 'https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_FM_SC')">
+                    <div class="r-table">
+                        <div class="r-cell-icon">🎷</div>
+                        <div class="r-cell-info">
+                            <div class="r-title">JOY FM</div>
+                            <div class="r-sub"><div class="live-dot green" id="live-dot-5" style="display:none;"></div> Yabancı Slow / Klasik</div>
+                        </div>
+                        <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-5">▶</span></div></div>
+                    </div>
+                </div>
+
+                <div class="radio-list-item" id="radyo-item-6" onclick="AppOS.playRadio(6, 'https://listen.radyofenomen.com/fenomen/128/icecast.audio')">
+                    <div class="r-table">
+                        <div class="r-cell-icon">📻</div>
+                        <div class="r-cell-info">
+                            <div class="r-title">RADYO FENOMEN</div>
+                            <div class="r-sub"><div class="live-dot green" id="live-dot-6" style="display:none;"></div> Güncel Pop / Hit</div>
+                        </div>
+                        <div class="r-cell-ctrl"><div class="r-controls"><span id="play-btn-6">▶</span></div></div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -315,9 +355,9 @@ function ajax(url, cb) {
 
 var AppOS = {
     currentRadioId: null,
+    totalRadios: 6, // Yeni eklenen radyolarla birlikte sayıyı güncelledik
 
     init: function() {
-        // Ekranın hazır olmasını bekle ve öyle ölçeklendir (TV bug çözümü)
         var self = this;
         setTimeout(function() { self.handleScaling(); }, 500);
         
@@ -354,11 +394,29 @@ var AppOS = {
             vid.playbackRate = 0.6; 
             vid.muted = true; 
             vid.defaultMuted = true;
-            vid.addEventListener('ended', function() { vid.currentTime = 0; vid.play().catch(function(e){}); }, false);
+            
+            // Oynatmayı güvenli şekilde tetikleme (Modern Browser/Tizen Uyumlu)
+            var playPromise = vid.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function(e) {
+                    // Cihaz video otomatik oynatmayı engelliyorsa fallback olarak poster göster
+                    console.log("Video otomatik oynatılamadı, poster moduna geçiliyor.", e);
+                    AppOS.toggleBackgroundMode('poster');
+                });
+            }
+            
+            vid.addEventListener('ended', function() { 
+                vid.currentTime = 0; 
+                vid.play().catch(function(e){}); 
+            }, false);
+            
+            // Videoda hata oluşursa (kodek hatası vb.) yine poster moduna geç
+            vid.addEventListener('error', function() {
+                AppOS.toggleBackgroundMode('poster');
+            }, true);
         }
     },
 
-    // Arayüz Arka Plan Değiştirici (Video <-> Poster geçişini kesin yapar)
     toggleBackgroundMode: function(mode) {
         var vid = document.getElementById('bg-video');
         var poster = document.getElementById('bg-poster');
@@ -368,7 +426,11 @@ var AppOS = {
             if(poster) poster.style.display = 'block';
         } else {
             if(poster) poster.style.display = 'none';
-            if(vid) { vid.style.display = 'block'; vid.play().catch(function(e){}); }
+            if(vid) { 
+                vid.style.display = 'block'; 
+                var p = vid.play();
+                if(p !== undefined) p.catch(function(e){}); 
+            }
         }
     },
 
@@ -383,11 +445,15 @@ var AppOS = {
     playRadio: function(id, streamUrl) {
         var player = document.getElementById('radio-player');
         
-        // Önce her şeyi sıfırla
-        for(var i=1; i<=3; i++) {
-            document.getElementById('play-btn-' + i).innerText = '▶';
-            document.getElementById('live-dot-' + i).style.display = 'none';
-            document.getElementById('radyo-item-' + i).className = 'radio-list-item';
+        // Dinamik olarak tüm radyo arayüzlerini sıfırla
+        for(var i = 1; i <= this.totalRadios; i++) {
+            var btnItem = document.getElementById('play-btn-' + i);
+            var dotItem = document.getElementById('live-dot-' + i);
+            var listItem = document.getElementById('radyo-item-' + i);
+            
+            if(btnItem) btnItem.innerText = '▶';
+            if(dotItem) dotItem.style.display = 'none';
+            if(listItem) listItem.className = 'radio-list-item';
         }
 
         // Kapatma işlemi
@@ -396,16 +462,13 @@ var AppOS = {
             player.removeAttribute('src'); 
             player.load();
             this.currentRadioId = null;
-            this.toggleBackgroundMode('video'); // Video geri gelsin
+            this.toggleBackgroundMode('video'); 
             return;
         }
 
         // Açma işlemi
         player.pause();
-        // TV'lerde 302 yönlendirmesi sorun yaratabilir, o yüzden cache engellemeyi (time param) kaldırdım
         player.src = streamUrl; 
-        
-        // Eski TV'ler için senkronize zorlama
         player.load(); 
         
         var btn = document.getElementById('play-btn-' + id);
@@ -413,23 +476,20 @@ var AppOS = {
         var item = document.getElementById('radyo-item-' + id);
 
         this.currentRadioId = id;
-        item.className = 'radio-list-item active';
+        if(item) item.className = 'radio-list-item active';
         
-        // TV'nin ses API'sini beklemeden UI'yi anında açık göster (Çünkü TV'de Promise dönmez)
-        btn.innerText = '⏸';
-        dot.style.display = 'inline-block';
+        if(btn) btn.innerText = '⏸';
+        if(dot) dot.style.display = 'inline-block';
         
-        // Arka planı anında Postere çevir (Siyah ekran kalmasın)
         this.toggleBackgroundMode('poster');
 
         var playPromise = player.play();
         if (playPromise !== undefined) {
             playPromise.catch(function(error) {
-                // Eğer hata verdiyse (Örn: TV linki engellediyse) uyarı olarak butonu geri döndür
                 console.error("Play hatası:", error);
-                btn.innerText = '▶';
-                item.className = 'radio-list-item';
-                dot.style.display = 'none';
+                if(btn) btn.innerText = '▶';
+                if(item) item.className = 'radio-list-item';
+                if(dot) dot.style.display = 'none';
                 AppOS.currentRadioId = null;
                 AppOS.toggleBackgroundMode('video');
             });
